@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daar-om HR — Interne Omgeving</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* Daar-om.nl kleuren — exact overgenomen van de website */
+  --teal:        #1E9CBF;
+  --teal-dark:   #157A98;
+  --teal-light:  #E8F7FB;
+  --orange:      #F05A28;
+  --orange-dark: #C8421A;
+  --navy:        #0B1F2A;
+  --navy-2:      #0D2B33;
+  --navy-3:      #1A3A47;
+  --dark:        #0D2B33;
+  --dark-2:      #1F4D5C;
+  --muted:       #6B8E9A;
+  --muted-2:     #9BBAC6;
+  --bg:          #F2F6F8;
+  --surface:     #FFFFFF;
+  --border:      #E2ECF0;
+  --success:     #1A7A50;
+  --success-bg:  #E0F5EC;
+  --danger:      #C03030;
+  --danger-bg:   #FDEAEA;
+  --warn:        #8A5800;
+  --warn-bg:     #FFF4DC;
+  --blue:        #1E9CBF;
+  --blue-dark:   #157A98;
+  --blue-light:  #E8F7FB;
+  --blue-lighter:#F2FAFD;
+  --sidebar-w:   240px;
+  --radius:      6px;
+}
+
+body { font-family: "Plus Jakarta Sans", sans-serif; background: var(--bg); color: var(--dark); min-height: 100vh; font-size: 14px; line-height: 1.6; }
+
+.ai-cite { display: none !important; }
+
+#app-screen { min-height: 100vh; display: flex; }
+
+/* ── SIDEBAR — navy zoals daar-om.nl navigatie ── */
+.sidebar {
+  width: var(--sidebar-w); background: var(--navy);
+  display: flex; flex-direction: column;
+  position: fixed; top:0; left:0; bottom:0; z-index:100;
+  border-right: 1px solid rgba(255,255,255,.06);
+}
+
+.logo { padding: 22px 20px 18px; border-bottom: 1px solid rgba(255,255,255,.08); }
+.logo-sub { font-size:9px; color:rgba(255,255,255,.35); letter-spacing:1.2px; text-transform:uppercase; margin-top:6px; font-weight:600; }
+
+nav { padding:12px 10px; flex:1; overflow-y:auto; }
+.nav-section { margin-bottom:24px; }
+.collega-card { user-select:none; }
+.collega-card.geselecteerd { border-color:var(--teal) !important; background:var(--teal-light) !important; transform:scale(1.04); box-shadow:0 4px 14px rgba(30,156,191,.2); }
+.nav-label { font-size:9px; font-weight:700; color:rgba(255,255,255,.45); letter-spacing:1.4px; text-transform:uppercase; padding:0 10px; margin-bottom:4px; }
+.nav-item { display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:6px; cursor:pointer; color:rgba(255,255,255,.8); font-size:13px; font-weight:500; transition:all .15s; margin-bottom:2px; border:none; background:none; width:100%; text-align:left; font-family:inherit; }
+.nav-item:hover { background:var(--orange); color:#fff; }
+.nav-item.active { background:var(--orange); color:#fff; font-weight:700; }
+.nav-item .icon { width:17px; height:17px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+
+.sidebar-user { padding:16px 20px; border-top:1px solid rgba(255,255,255,.08); display:flex; align-items:center; justify-content:center; }
+.user-av { width:34px; height:34px; border-radius:50%; background:var(--teal); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0; }
+.user-name { font-size:13px; font-weight:600; color:#fff; }
+.user-role { font-size:11px; color:rgba(255,255,255,.4); }
+
+/* ── MAIN CONTENT ── */
+.main { margin-left:var(--sidebar-w); flex:1; display:flex; flex-direction:column; min-height:100vh; }
+.topbar { background:var(--navy); padding:0 32px; height:56px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; border-bottom:1px solid rgba(255,255,255,.08); }
+.page-title { font-size:15px; font-weight:700; color:#fff; letter-spacing:-.2px; }
+.topbar-right { display:flex; align-items:center; gap:10px; }
+.btn { padding:8px 16px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; border:1px solid rgba(255,255,255,.2); background:rgba(255,255,255,.1); color:#fff; font-family:inherit; transition:all .12s; }
+.btn:hover { background:rgba(255,255,255,.18); }
+.btn-white { background:#fff; color:var(--navy); border-color:#fff; font-weight:700; }
+.btn-white:hover { background:#E8F7FB; }
+
+.content { padding:32px; flex:1; background:var(--bg); }
+
+/* ── BANNERS — compact, stijl van daar-om.nl ── */
+.welcome-banner {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-3) 100%);
+  border-radius: 6px; padding: 12px 18px; margin-bottom: 18px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 14px; border: 1px solid rgba(255,255,255,.08);
+}
+.welcome-banner::before { display:none; }
+.welcome-banner::after  { display:none; }
+.wb-left { position:relative; z-index:1; }
+.wb-greeting { display:none; }
+.wb-name { font-size:15px; font-weight:800; color:#fff; letter-spacing:-.3px; margin:0; }
+.wb-sub  { font-size:12px; color:rgba(255,255,255,.55); line-height:1.5; margin-top:3px; }
+
+/* ── KAARTEN — wit op lichtgrijze achtergrond, strak ── */
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+.card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.06); transition:box-shadow .15s; }
+.card:hover { box-shadow:0 4px 16px rgba(0,0,0,.1); }
+.card-header { padding:14px 20px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); background:#fff; }
+.card-title { font-size:13px; font-weight:700; color:var(--dark); text-transform:uppercase; letter-spacing:.4px; }
+.card-body  { padding:18px 20px; }
+
+.ag-row { display:flex; gap:14px; align-items:flex-start; padding:10px 0; border-bottom:1px solid var(--border); }
+.ag-row:last-child { border-bottom:none; }
+.ag-date { min-width:42px; text-align:center; background:var(--blue-light); border-radius:8px; padding:5px 4px; flex-shrink:0; }
+.ag-day   { font-size:19px; font-weight:700; line-height:1; color:var(--blue); }
+.ag-month { font-size:10px; color:var(--blue-dark); font-weight:600; text-transform:uppercase; letter-spacing:.4px; }
+.ag-label { font-size:13px; font-weight:600; color:var(--dark); padding-top:3px; }
+.ag-sub   { font-size:12px; color:var(--muted-2); }
+
+.table { width:100%; border-collapse:collapse; }
+.table th { text-align:left; font-size:10.5px; font-weight:700; color:var(--muted-2); text-transform:uppercase; letter-spacing:.7px; padding:0 0 10px; border-bottom:1px solid var(--border); }
+.table td { padding:10px 0; font-size:13px; border-bottom:1px solid var(--border); vertical-align:middle; }
+.table tr:last-child td { border-bottom:none; }
+
+.gids-layout { display:grid; grid-template-columns:220px 1fr; gap:24px; align-items:start; }
+.gids-nav { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; position:sticky; top:86px; box-shadow:0 1px 4px rgba(14,90,115,.08); }
+.gids-nav-header { padding:14px 16px; border-bottom:1px solid var(--border); font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.6px; background:var(--blue-lighter); }
+.gids-nav-item { display:flex; align-items:center; gap:8px; padding:10px 16px; font-size:13px; cursor:pointer; border-bottom:1px solid var(--border); color:var(--dark-2); transition:all .12s; border-left:3px solid transparent; }
+.gids-nav-item:last-child { border-bottom:none; }
+.gids-nav-item:hover { background:#EBF7FB; }
+.gids-nav-item.active { background:#EBF7FB; color:var(--teal-dark); font-weight:700; border-left-color:var(--orange); }
+.gids-section { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; box-shadow:0 1px 4px rgba(14,90,115,.08); margin-bottom:16px; }
+.gids-section-header { padding:18px 22px 14px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; background:linear-gradient(135deg,var(--blue-lighter) 0%,#fff 100%); }
+.gids-icon { width:38px; height:38px; border-radius:10px; background:var(--blue-light); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; border:1px solid var(--border); }
+.gids-section-title { font-size:15px; font-weight:700; color:var(--dark); }
+.gids-section-sub   { font-size:12px; color:var(--muted); margin-top:2px; }
+.gids-body { padding:20px 22px; }
+.regel-item { padding:14px 0; border-bottom:1px solid var(--border); }
+.regel-item:last-child { border-bottom:none; }
+.regel-title { font-size:13.5px; font-weight:700; margin-bottom:5px; color:var(--dark); }
+.regel-text  { font-size:13px; color:var(--muted); line-height:1.65; }
+
+.calendar-wrapper { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; box-shadow:0 1px 4px rgba(14,90,115,.08); }
+.cal-header { display:flex; justify-content:space-between; align-items:center; padding:16px 24px; background:#fff; border-bottom:1px solid var(--border); }
+.cal-btn { background:white; border:1px solid var(--border); border-radius:20px; padding:7px 16px; cursor:pointer; font-size:13px; font-weight:600; color:var(--dark-2); transition:all .15s; }
+.cal-btn:hover { background:var(--orange); color:white; border-color:var(--orange); }
+.cal-title { font-size:20px; font-weight:700; color:var(--dark); text-transform:capitalize; letter-spacing:-.3px; }
+.cal-days { display:grid; grid-template-columns:repeat(7,1fr); background:var(--bg); border-bottom:1px solid var(--border); }
+.cal-day-name { text-align:center; padding:12px 0; font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.8px; }
+.cal-dates { display:grid; grid-template-columns:repeat(7,1fr); }
+.cal-date { min-height:120px; padding:8px 6px 6px; border-right:1px solid var(--border); border-bottom:1px solid var(--border); display:flex; flex-direction:column; gap:4px; }
+.cal-date:nth-child(7n) { border-right:none; }
+.cal-date.empty { background:#FAFBFB; }
+.cal-date.weekend { background:#F9FAFB; }
+.cal-date-num { font-size:13px; font-weight:500; color:var(--dark-2); display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; align-self:flex-start; margin-bottom:2px; }
+.cal-date.today .cal-date-num { background:var(--orange); color:white; font-weight:700; }
+.evt-badge { font-size:11.5px; font-weight:600; padding:3px 8px 3px 6px; border-radius:4px; line-height:1.5; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:left; display:flex; align-items:center; gap:4px; width:100%; }
+.evt-holiday { background:#DCFCE7; color:#166534; border:none; font-weight:600; }
+.evt-office { background:#FEF9C3; color:#854D0E; border:none; font-weight:600; }
+.evt-routine { background:#EEF2FF; color:#4338CA; border:none; font-weight:600; }
+
+/* TEAM GRID */
+.team-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); gap:20px; margin-top:20px; }
+.team-card { background:white; border:1px solid var(--border); border-radius:14px; padding:24px 16px 20px; text-align:center; box-shadow:0 2px 8px rgba(14,90,115,.06); transition:transform 0.2s, box-shadow 0.2s; }
+.team-card:hover { transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,.12); }
+.team-av { width:90px; height:90px; border-radius:50%; margin:0 auto 14px; border:3px solid var(--blue-light); overflow:hidden; background:var(--blue); display:flex; align-items:center; justify-content:center; }
+.team-av img { width:100%; height:100%; object-fit:cover; object-position:center top; display:block; }
+.team-name { font-size:14px; font-weight:700; color:var(--dark); margin-bottom:6px; line-height:1.3; }
+.team-role { font-size:11.5px; color:var(--muted); background:var(--bg); display:inline-block; padding:4px 10px; border-radius:12px; font-weight:600; line-height:1.4; }
+
+.idea-form { max-width:600px; background:white; border:1px solid var(--border); border-radius:12px; padding:24px; }
+.form-group { margin-bottom:16px; }
+.form-group label { display:block; font-size:12px; font-weight:700; color:var(--dark-2); margin-bottom:6px; }
+.form-group input[type="text"], .form-group textarea { width:100%; padding:12px; border:1.5px solid var(--border); border-radius:8px; font-size:14px; font-family:inherit; transition:border-color 0.2s; }
+.form-group input[type="text"]:focus, .form-group textarea:focus { border-color:var(--blue); outline:none; }
+.form-group textarea { resize:vertical; min-height:120px; }
+
+.alert { display:flex; align-items:flex-start; gap:10px; padding:11px 13px; border-radius:8px; margin-bottom:8px; border-left:3px solid transparent; }
+.alert:last-child { margin-bottom:0; }
+.alert-title { font-weight:600; font-size:13px; color:var(--dark); }
+.alert-sub   { color:var(--muted); font-size:12px; margin-top:2px; }
+.al-blue  { background:#EBF7FB; border-color:var(--teal); }
+.al-amber { background:var(--warn-bg);     border-color:#D09000; }
+.al-green { background:var(--success-bg);  border-color:var(--success); }
+.al-orange { background:#FFF0E8; border-color:var(--orange); }
+
+@keyframes bounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-6px)} }
+@keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+#chat-panel { position:fixed; bottom:88px; right:24px; width:360px; height:540px; background:var(--surface); border:1px solid var(--border); border-radius:16px; box-shadow:0 8px 40px rgba(14,90,115,.2); display:none; flex-direction:column; z-index:200; overflow:hidden; animation:slideUp .2s ease; }
+#chat-fab { position:fixed; bottom:24px; right:24px; width:52px; height:52px; border-radius:50%; background:var(--blue); color:white; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:22px; box-shadow:0 4px 20px rgba(30,156,191,.4); z-index:201; transition:transform .2s, box-shadow .2s; }
+#chat-fab:hover { box-shadow:0 6px 28px rgba(30,156,191,.55); }
+</style>
+</head>
+<body>
+
+<div id="app-screen">
+  <aside class="sidebar">
+    <div class="logo">
+      <svg width="148" height="36" viewBox="0 0 148 36" fill="none">
+        <text x="0" y="25" font-family="Plus Jakarta Sans, sans-serif" font-weight="800" font-size="24" fill="white" letter-spacing="-0.5">daar-</text>
+        <text x="67" y="25" font-family="Plus Jakarta Sans, sans-serif" font-weight="800" font-size="24" fill="#1E9CBF" letter-spacing="-0.5">om</text>
+        <circle cx="103" cy="13" r="7" fill="#1E9CBF"/>
+        <circle cx="103" cy="13" r="4.5" fill="rgba(255,255,255,0.25)"/>
+        <text x="109" y="25" font-family="Plus Jakarta Sans, sans-serif" font-weight="800" font-size="24" fill="white" letter-spacing="-0.5">.nl</text>
+      </svg>
+      <div class="logo-sub">Interne Omgeving</div>
+    </div>
+    <nav id="sidebar-nav"></nav>
+    <div class="sidebar-user" style="justify-content:center;padding:16px;">
+      <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="22" cy="22" r="22" fill="#1E9CBF"/>
+        <path d="M22 10C15.373 10 10 14.925 10 21c0 3.39 1.524 6.435 3.953 8.547L13 34l4.797-2.399A13.3 13.3 0 0 0 22 32c6.627 0 12-4.925 12-11S28.627 10 22 10z" fill="white"/>
+      </svg>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="page-title" id="page-title">Dashboard</div>
+      <div class="topbar-right" id="topbar-actions"></div>
+    </div>
+    <div class="content" id="main-content"></div>
+  </main>
+</div>
+
+<button id="chat-fab" onclick="toggleChat()" title="Stel een HR-vraag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+
+<div id="chat-panel">
+  <div style="background:var(--blue);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M9 11V7a3 3 0 0 1 6 0v4"/><circle cx="9" cy="16" r="1" fill="currentColor"/><circle cx="15" cy="16" r="1" fill="currentColor"/><path d="M9.5 21h5"/></svg></div>
+      <div>
+        <div style="font-size:13.5px;font-weight:700;color:#fff">HR-assistent</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.7);display:flex;align-items:center;gap:4px">
+          <span style="width:6px;height:6px;border-radius:50%;background:#4ade80;display:inline-block"></span>
+          daar-om.nl
+        </div>
+      </div>
+    </div>
+    <button onclick="toggleChat()" style="background:rgba(255,255,255,.15);border:none;color:white;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center">×</button>
+  </div>
+  <div style="padding:10px 12px;border-bottom:1px solid var(--border);background:var(--blue-lighter);flex-shrink:0">
+    <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:7px;text-transform:uppercase;letter-spacing:.5px">Snel antwoord op:</div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px">
+      <button onclick="quickAsk('Hoe meld ik me ziek?')" style="font-size:11px;padding:4px 9px;border-radius:12px;border:1px solid var(--border);background:white;cursor:pointer;color:var(--dark-2);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M4.5 6.5a7 7 0 1 1 11 5.77V20a2 2 0 0 1-4 0v-1h-2v1a2 2 0 0 1-4 0v-7.73A7 7 0 0 1 4.5 6.5z"/></svg> Ziek melden</button>
+      <button onclick="quickAsk('Hoeveel vakantiedagen heb ik?')" style="font-size:11px;padding:4px 9px;border-radius:12px;border:1px solid var(--border);background:white;cursor:pointer;color:var(--dark-2);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="10" r="3"/><path d="M12 2v2m0 16v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M2 12h2m16 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg> Vakantie</button>
+      <button onclick="quickAsk('Hoe declareer ik onkosten?')" style="font-size:11px;padding:4px 9px;border-radius:12px;border:1px solid var(--border);background:white;cursor:pointer;color:var(--dark-2);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/><path d="M16 8H8m8 4H8m8 4H8"/></svg> Declareren</button>
+      <button onclick="quickAsk('Wat is de reiskostenvergoeding?')" style="font-size:11px;padding:4px 9px;border-radius:12px;border:1px solid var(--border);background:white;cursor:pointer;color:var(--dark-2);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v9a2 2 0 0 1-2 2h-2"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg> Reiskosten</button>
+      <button onclick="quickAsk('Wanneer is de VrijMiBo?')" style="font-size:11px;padding:4px 9px;border-radius:12px;border:1px solid var(--border);background:white;cursor:pointer;color:var(--dark-2);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M17 11h1a3 3 0 0 1 0 6h-1"/><path d="M9 12v6"/><path d="M13 12v6"/><path d="M14 7.5c-1 0-1.44.5-3 .5s-2-.5-3-.5-1.72.5-2.5.5a2.5 2.5 0 0 1 0-5c.78 0 1.57.5 2.5.5S9.44 3 11 3s2 .5 3 .5 1.72-.5 2.5-.5a2.5 2.5 0 0 1 0 5c-.78 0-1.5-.5-2.5-.5z"/></svg> VrijMiBo</button>
+      <button onclick="quickAsk('Mag ik thuiswerken?')" style="font-size:11px;padding:4px 9px;border-radius:12px;border:1px solid var(--border);background:white;cursor:pointer;color:var(--dark-2);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Thuiswerken</button>
+      <button onclick="quickAsk('Wat zijn de officiële feestdagen?')" style="font-size:11px;padding:4px 9px;border-radius:12px;border:1px solid var(--border);background:white;cursor:pointer;color:var(--dark-2);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"/><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2z"/></svg> Feestdagen</button>
+      <button onclick="quickAsk('Hoe kan ik verlof aanvragen?')" style="font-size:11px;padding:4px 9px;border-radius:12px;border:1px solid var(--border);background:white;cursor:pointer;color:var(--dark-2);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M17 8C8 10 5.9 16.17 3.82 22"/><path d="M8 10C9 4.8 15 3 18 2c-1 3.5-5.5 5-7 8"/><path d="M18 2c3 5 2.5 10 0 14"/><path d="M12 22v-8"/></svg> Verlof</button>
+    </div>
+  </div>
+  <div id="chat-messages" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column"></div>
+  <div style="padding:12px;border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0;background:white">
+    <input id="chat-input" type="text" placeholder="Stel je HR-vraag..."
+      style="flex:1;border:1.5px solid var(--border);border-radius:20px;padding:8px 14px;font-size:13px;font-family:inherit;outline:none;color:var(--dark)"
+      onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border)'"
+      onkeydown="if(event.key==='Enter')sendChatMessage()">
+    <button onclick="sendChatMessage()" style="width:36px;height:36px;border-radius:50%;background:var(--blue);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => { buildNav(); showDashboard(); });
+
+const navIcon = (path) => `<span class="icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none">${path}</svg></span>`;
+
+function buildNav() {
+  const nav = document.getElementById("sidebar-nav");
+  nav.innerHTML = `
+    <div class="nav-section">
+      <div class="nav-label">Informatie & Regels</div>
+      <button class="nav-item active" onclick="navClick(this,'Dashboard',showDashboard)">
+        ${navIcon('<rect x="1" y="1" width="6.5" height="6.5" rx="1.5" fill="currentColor"/><rect x="8.5" y="1" width="6.5" height="6.5" rx="1.5" fill="currentColor" opacity=".4"/><rect x="1" y="8.5" width="6.5" height="6.5" rx="1.5" fill="currentColor" opacity=".4"/><rect x="8.5" y="8.5" width="6.5" height="6.5" rx="1.5" fill="currentColor" opacity=".4"/>')}
+        Dashboard
+      </button>
+      <button class="nav-item" onclick="navClick(this,'Bedrijfsgids',showGids)">
+        ${navIcon('<rect x="2" y="1" width="12" height="14" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M5 5h6M5 8h6M5 11h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>')}
+        Bedrijfsgids
+      </button>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Collega's & Organisatie</div>
+      <button class="nav-item" onclick="navClick(this,'Wie is Wie (Smoelenboek)',showTeam)">
+        ${navIcon('<circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><path d="M3 14c0-2.5 2.5-4.5 5-4.5s5 2 5 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>')}
+        Wie is Wie
+      </button>
+      <button class="nav-item" onclick="navClick(this,'Digitale Ideeënbus',showIdeeenbus)">
+        ${navIcon('<path d="M8 2v1m0 10v1M4 4l1 1m6 6 1 1M2 8h1m10 0h1M4 12l1-1m6-6 1-1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>')}
+        Ideeënbus
+      </button>
+      <button class="nav-item" onclick="navClick(this,'Medewerker van de Maand',showMvdM)">
+        ${navIcon('<path d="M8 1.5l1.6 4.8H15l-4 2.9 1.5 4.8L8 11l-4.5 3 1.5-4.8-4-2.9h5.4L8 1.5z" fill="currentColor" opacity=".85"/>')}
+        Medewerker v/d Maand
+      </button>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Planning & Agenda</div>
+      <button class="nav-item" onclick="navClick(this,'Kalender & Evenementen',showKalender)">
+        ${navIcon('<rect x="2" y="3" width="12" height="11" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M5 1.5v3M11 1.5v3M2 7.5h12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>')}
+        Kalender & Feestdagen
+      </button>
+      <button class="nav-item" onclick="navClick(this,'Corvee Rooster',showCorvee)">
+        ${navIcon('<circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.4"/><path d="M5 8h6M8 5v6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>')}
+        Corvee Rooster
+      </button>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Voor Stagiaires</div>
+      <button class="nav-item" onclick="navClick(this,'Inwerkschema Advertising',showInwerkAds)">
+        ${navIcon('<path d="M8 1.5l1.6 4.8H15l-4 2.9 1.5 4.8L8 11l-4.5 3 1.5-4.8-4-2.9h5.4L8 1.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>')}
+        Inwerkschema Advertising
+      </button>
+      <button class="nav-item" onclick="navClick(this,'Inwerkschema SEO/CXO',showInwerkSEO)">
+        ${navIcon('<path d="M8 1.5l1.6 4.8H15l-4 2.9 1.5 4.8L8 11l-4.5 3 1.5-4.8-4-2.9h5.4L8 1.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>')}
+        Inwerkschema SEO / CXO
+      </button>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Systemen</div>
+      <button class="nav-item" onclick="navClick(this,'Simplicate vs. HR Portaal',showSystemen)">
+        ${navIcon('<path d="M2 14V9M6 14V5M10 14V7.5M14 14V3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>')}
+        Welk systeem gebruik ik?
+      </button>
+    </div>
+  `;
+}
+
+function navClick(el, title, fn) {
+  document.querySelectorAll(".nav-item").forEach(i => i.classList.remove("active"));
+  el.classList.add("active");
+  document.getElementById("page-title").textContent = title;
+  if (fn) fn();
+}
+
+// ── DASHBOARD ──
+function showDashboard() {
+  document.getElementById("topbar-actions").innerHTML = ``;
+  document.getElementById("main-content").innerHTML = `
+    <div class="welcome-banner">
+      <div class="wb-left">
+        <div class="wb-greeting">Interne Omgeving</div>
+        <div class="wb-name">Welkom bij daar-om.nl <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg></div>
+        <div class="wb-sub">Dit is de centrale plek voor alle interne informatie, bedrijfsregels, de evenementenkalender en het actuele corvee rooster.</div>
+      </div>
+    </div>
+    <div class="alert al-orange" style="margin-bottom:20px;border-left:4px solid var(--orange);padding:14px 16px;border-radius:6px;background:#FFF4EE;">
+      <span style="font-size:20px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span>
+      <div>
+        <div class="alert-title" style="font-size:15px;">Let op: Urenregistratie in Simplicate</div>
+        <div class="alert-sub" style="font-size:13px;">Vergeet je uren in Simplicate niet in te vullen voor het einde van de maand!</div>
+      </div>
+    </div>
+    <!-- MEDEWERKER VAN DE MAAND SPOTLIGHT -->
+    <div id="mvdm-spotlight"></div>
+
+    <div class="grid-2">
+      <div class="card" style="cursor:pointer" onclick="navClick(document.querySelectorAll('.nav-item')[1],'Bedrijfsgids',showGids)">
+        <div class="card-header"><div class="card-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Bedrijfsgids (Reglement)</div></div>
+        <div class="card-body"><p style="color:var(--muted);font-size:13px;">Lees alles over onze kernwaarden, vakantieregels, reiskosten, huisregels en secundaire arbeidsvoorwaarden.</p></div>
+      </div>
+      <div class="card" style="cursor:pointer" onclick="navClick(document.querySelectorAll('.nav-item')[4],'Kalender & Evenementen',showKalender)">
+        <div class="card-header"><div class="card-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>️ Kalender & Feestdagen</div></div>
+        <div class="card-body"><p style="color:var(--muted);font-size:13px;">Bekijk de kalender voor de komende verplichte vrije dagen en wekelijkse kantoorroutines.</p></div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card" style="cursor:pointer" onclick="navClick(document.querySelectorAll('.nav-item')[5],'Corvee Rooster',showCorvee)">
+        <div class="card-header"><div class="card-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M3 11v3a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-3"/><path d="M12 19H4a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-3.83"/><path d="m3 11 7.77-6.04a2 2 0 0 1 2.46 0L21 11H3z"/></svg> Corvee Rooster</div></div>
+        <div class="card-body"><p style="color:var(--muted);font-size:13px;">Wie zet de lunch klaar en wie doet de afwas? Bekijk hier het schema van deze week.</p></div>
+      </div>
+      <div class="card" style="cursor:pointer" onclick="navClick(document.querySelectorAll('.nav-item')[2],'Wie is Wie (Smoelenboek)',showTeam)">
+        <div class="card-header"><div class="card-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg> Wie is Wie?</div></div>
+        <div class="card-body"><p style="color:var(--muted);font-size:13px;">Ben je nieuw of op zoek naar een specifieke collega? Bekijk hier alle 26 teamleden van daar-om.nl.</p></div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card" style="cursor:pointer" onclick="navClick(document.querySelectorAll('.nav-item')[3],'Medewerker van de Maand',showMvdM)">
+        <div class="card-header"><div class="card-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Medewerker van de Maand</div></div>
+        <div class="card-body"><p style="color:var(--muted);font-size:13px;">Nomineer een collega, bekijk de huidige winnaar en de Hall of Fame van vorige winnaars.</p></div>
+      </div>
+      <div class="card" style="cursor:pointer" onclick="navClick(document.querySelectorAll('.nav-item')[3],'Medewerker van de Maand',showMvdM)">
+        <div class="card-header"><div class="card-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg> Hall of Fame</div></div>
+        <div class="card-body"><p style="color:var(--muted);font-size:13px;">Alle winnaars van de Medewerker van de Maand verkiezing op een rij.</p></div>
+      </div>
+    </div>
+  `;
+  // Render spotlight op dashboard
+  renderSpotlight();
+}
+
+// ── TEAM — ECHTE FOTO'S EN NAMEN VAN DAAR-OM.NL/TEAM ──
+function showTeam() {
+  document.getElementById("topbar-actions").innerHTML = ``;
+
+  const teamMembers = [
+    { name: "Manon Dinkla",         role: "Projectmanager" },
+    { name: "Tirza Nab",            role: "Social specialist" },
+    { name: "Wolter van der Weide", role: "Eigenaar" },
+    { name: "Tim Bodewes",          role: "Eigenaar" },
+    { name: "Jesse Joustra",        role: "Mede-eigenaar Blue Monkey Media" },
+    { name: "Eline Nijeboer",       role: "Merk- en creatief strateeg" },
+    { name: "Susan Batterink",      role: "Social specialist" },
+    { name: "Aimee Veldman",        role: "SEO specialist" },
+    { name: "Laura Mossel",         role: "SEO-specialist en copywriter" },
+    { name: "Andries Aalders",      role: "Advertising specialist" },
+    { name: "Noa Drenth",           role: "Advertising specialist" },
+    { name: "Remco de Jong",        role: "Advertising en data specialist" },
+    { name: "Rémon van der Velde",  role: "Operationeel manager" },
+    { name: "Iris Brandsma",        role: "Website developer" },
+    { name: "Elwina Pluimers",      role: "Social specialist" },
+    { name: "Aron van der Graaff",  role: "Mede-eigenaar Blue Monkey Media" },
+    { name: "Silvan Visscher",      role: "Website developer" },
+    { name: "Mark Kranenburg",      role: "Website developer" },
+    { name: "Thomas Nomden",        role: "Teammanager daar-so.nl" },
+    { name: "Shanna Stapersma",     role: "CRO Specialist" },
+    { name: "Ericka Urrutia",       role: "Teammanager talent ontwikkeling" },
+    { name: "Paul Klooster",        role: "Social en email specialist" },
+    { name: "Lars Penninga",        role: "CRO specialist" },
+    { name: "Leonie Krol",          role: "Social specialist" },
+    { name: "Lasse Joustra",        role: "Mede-eigenaar Blue Monkey Media" },
+    { name: "Richard Haaijer",      role: "Advertising specialist" },
+  ];
+
+  // Genereer een kleur per initiaal voor de avatar
+  const colors = ["#1E9CBF","#F05A28","#1A7A50","#7B5EA7","#157A98","#C8421A","#0D2B33","#2BA8C8"];
+
+  let cardsHTML = '';
+  teamMembers.forEach((member, i) => {
+    const initial = member.name.charAt(0);
+    const color   = colors[i % colors.length];
+    cardsHTML += `
+      <div class="team-card">
+        <div class="team-av" style="background:${color};">
+          <span style="font-size:32px;font-weight:800;color:white;line-height:1;">${initial}</span>
+        </div>
+        <div class="team-name">${member.name}</div>
+        <div class="team-role">${member.role}</div>
+      </div>`;
+  });
+
+  document.getElementById("main-content").innerHTML = `
+    <div style="max-width:1100px">
+      <div style="background:linear-gradient(135deg,#157A98 0%,#0B2B35 100%);border-radius:10px;padding:14px 20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:18px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></span>
+          <div>
+            <div style="font-size:15px;font-weight:800;color:#fff;letter-spacing:-.3px;">Wie is Wie?</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.65);">26 specialisten van daar-om.nl</div>
+          </div>
+        </div>
+        <a href="https://www.daar-om.nl/team/" target="_blank"
+          style="display:inline-flex;align-items:center;gap:6px;background:white;color:#157A98;font-weight:700;font-size:12px;padding:8px 14px;border-radius:8px;text-decoration:none;white-space:nowrap;flex-shrink:0;">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M2 8h12M8 2l6 6-6 6" stroke="#157A98" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Bekijk het volledige team
+        </a>
+      </div>
+
+      <div style="background:white;border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:20px;display:flex;align-items:center;gap:14px;">
+        <div style="font-size:28px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+        <div>
+          <div style="font-weight:700;color:var(--dark);margin-bottom:3px;">Wil je de echte foto's zien?</div>
+          <div style="font-size:13px;color:var(--muted);">Bekijk de officiële teampagina op
+            <a href="https://www.daar-om.nl/team/" target="_blank" style="color:var(--blue);font-weight:600;text-decoration:none;">www.daar-om.nl/team</a>
+            voor de foto's, namen en functies van alle collega's.
+          </div>
+        </div>
+      </div>
+
+      <div class="team-grid">${cardsHTML}</div>
+    </div>`;
+}
+
+// ── IDEEËNBUS ──
+function showIdeeenbus() {
+  document.getElementById("topbar-actions").innerHTML = ``;
+  document.getElementById("main-content").innerHTML = `
+    <div style="max-width:800px">
+      <div class="welcome-banner" style="background:linear-gradient(135deg,#F05A28 0%,#C8421A 100%);">
+        <div class="wb-left">
+          <div class="wb-greeting">Organisatie</div>
+          <div class="wb-name">Digitale Ideeënbus <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></div>
+          <div class="wb-sub">Heb je een briljant idee voor kantoor, een suggestie voor het teamuitje of tips voor onze processen? Laat het ons (anoniem) weten!</div>
+        </div>
+      </div>
+      <div class="idea-form">
+        <div style="margin-bottom:20px;">
+          <h3 style="color:var(--dark);margin-bottom:8px;">Deel je idee!</h3>
+          <p style="font-size:13px;color:var(--muted);">We staan altijd open voor verbetering. Je inzending wordt gelezen door het MT en als het een goed idee is, gaan we er direct mee aan de slag.</p>
+        </div>
+        <div class="form-group">
+          <label>Onderwerp / Titel van je idee</label>
+          <input type="text" id="idea-title" placeholder="Bijv. Vaker pingpong toernooien organiseren">
+        </div>
+        <div class="form-group">
+          <label>Jouw idee of suggestie in detail</label>
+          <textarea id="idea-desc" placeholder="Beschrijf hier wat je idee is en waarom dit goed is voor daar-om.nl..."></textarea>
+        </div>
+        <div class="form-group" style="display:flex;align-items:center;gap:10px;">
+          <input type="checkbox" id="idea-anon" style="width:16px;height:16px;cursor:pointer;">
+          <label for="idea-anon" style="margin:0;font-size:13px;cursor:pointer;">Ik wil dit idee anoniem insturen.</label>
+        </div>
+        <button onclick="submitIdea()" style="width:100%;padding:14px;font-size:14px;font-weight:700;font-family:inherit;margin-top:10px;background:var(--orange);color:white;border:none;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+          Idee Versturen
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+        <div id="idea-success" style="display:none;margin-top:16px;padding:14px 16px;background:var(--success-bg);color:var(--success);border-radius:8px;border-left:4px solid var(--success);font-weight:600;font-size:13px;">
+          Bedankt! Je idee is direct verstuurd naar de ideeënbus. We nemen het serieus!
+        </div>
+        <div id="idea-error" style="display:none;margin-top:16px;padding:14px 16px;background:var(--danger-bg);color:var(--danger);border-radius:8px;border-left:4px solid var(--danger);font-weight:600;font-size:13px;">
+          Er ging iets mis. Probeer het opnieuw of mail je idee naar <a href="mailto:Thijn.smilda@daar-om.nl" style="color:var(--danger);">Thijn.smilda@daar-om.nl</a>.
+        </div>
+      </div>
+    </div>`;
+}
+
+async function submitIdea() {
+  const title  = document.getElementById('idea-title').value.trim();
+  const desc   = document.getElementById('idea-desc').value.trim();
+  const anon   = document.getElementById('idea-anon').checked;
+  const btn    = document.querySelector('[onclick="submitIdea()"]');
+
+  if (!title || !desc) { alert('Vul aub een onderwerp en een beschrijving in!'); return; }
+
+  // Knop uitschakelen tijdens verzenden
+  btn.disabled = true;
+  btn.textContent = 'Versturen...';
+
+  try {
+    const response = await fetch('https://formspree.io/f/mqegvydn', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        onderwerp: 'Ideeënbus: ' + title,
+        titel:     title,
+        idee:      desc,
+        anoniem:   anon ? 'Ja' : 'Nee'
+      })
+    });
+
+    if (response.ok) {
+      document.getElementById('idea-title').value  = '';
+      document.getElementById('idea-desc').value   = '';
+      document.getElementById('idea-anon').checked = false;
+      document.getElementById('idea-success').style.display = 'block';
+      document.getElementById('idea-error').style.display   = 'none';
+      setTimeout(() => { document.getElementById('idea-success').style.display = 'none'; }, 6000);
+    } else {
+      document.getElementById('idea-error').style.display = 'block';
+    }
+  } catch (err) {
+    document.getElementById('idea-error').style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = 'Idee Versturen <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
+  }
+}
+
+// ── CORVEE ──
+function showCorvee() {
+  document.getElementById("topbar-actions").innerHTML = ``;
+  document.getElementById("main-content").innerHTML = `
+    <div style="max-width:900px">
+      <div class="welcome-banner" style="background:linear-gradient(135deg,#157A98 0%,#2BA8C8 100%);">
+        <div class="wb-left">
+          <div class="wb-greeting">Planning</div>
+          <div class="wb-name">Corvee Rooster <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M3 11v3a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-3"/><path d="M12 19H4a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-3.83"/><path d="m3 11 7.77-6.04a2 2 0 0 1 2.46 0L21 11H3z"/></svg></div>
+          <div class="wb-sub">Het actuele rooster voor daar-om, daar-so, BMM & Byngo. Dagelijks wordt de lunch verzorgd tussen 12:00 en 13:00 uur.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Rooster — Deze Week</div></div>
+        <div class="card-body" style="overflow-x:auto;">
+          <table class="table" style="min-width:700px;">
+            <thead><tr><th>Dag</th><th>Brood (09:00)</th><th>Pantry (09:00)</th><th>Klaarzetten (11:50)</th><th>Opruimen (na lunch)</th><th>Afwas kantine (16:00)</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:600">Maandag</td><td>-</td><td>Thijn</td><td>Bart, Ryan, BMM</td><td>Shanna, Laura, Rosanne</td><td>Xylina</td></tr>
+              <tr><td style="font-weight:600">Dinsdag</td><td>Susan / Iris</td><td>Leonie</td><td>Eline, Susan, Byngo</td><td>Iris, Lotte, Kirsten</td><td>Jesse</td></tr>
+              <tr><td style="font-weight:600">Woensdag</td><td>Andries / Lars</td><td>Rosanne</td><td>Mark, Tirza, Remon</td><td>Andries, Lars, Jesse</td><td>Sarah</td></tr>
+              <tr><td style="font-weight:600">Donderdag</td><td>Silvan / Remco</td><td>Tom</td><td>Remco, Silvan, Sarah</td><td>Aimee, Thijs, Tom</td><td>Laurie</td></tr>
+              <tr><td style="font-weight:600">Vrijdag</td><td>Ericka</td><td>Kirsten</td><td>Paul, Bart, Ericka</td><td>Xylina, Thomas, Thijn</td><td>Laurie</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top:14px">
+        <div class="card">
+          <div class="card-header"><div class="card-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Denk Om (Elke dag)</div></div>
+          <div class="card-body" style="font-size:13px;color:var(--dark-2);line-height:1.6;">
+            <ul style="padding-left:16px;">
+              <li>Kijken in de kast wat er nog aan brood ligt OF brood uit de vriezer halen.</li>
+              <li>Vaatwasser aanzetten → NA DE LUNCH OP INTENSIEF en in 2 delen.</li>
+              <li>Vaatwasser in- en uitpakken.</li>
+              <li>Vochtig doekje over de tafels, buffet en aanrecht.</li>
+              <li>Wasbak schoon achterlaten.</li>
+              <li>Aanrecht afnemen, met name bij de tostiapparaten.</li>
+              <li>Glazen aanvullen pantry/keuken.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Extra Taken</div></div>
+          <div class="card-body" style="font-size:13px;color:var(--dark-2);line-height:1.6;">
+            <ul style="padding-left:16px;">
+              <li><strong>Boodschappen:</strong> Maandagochtend (Ericka/Stagiairs).</li>
+              <li><strong>Brievenbus:</strong> Maandag en Donderdag.</li>
+              <li><strong>Planten:</strong> Vrijdag (Ericka beneden).</li>
+              <li><strong>Koffie bijvullen:</strong> Dagelijks checken.</li>
+              <li><strong>Bij lekker weer:</strong> Kussens binnen leggen.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ── INWERKSCHEMA ADVERTISING ──
+function showInwerkAds() {
+  document.getElementById("topbar-actions").innerHTML = ``;
+  document.getElementById("main-content").innerHTML = `
+    <div style="max-width:600px">
+      <a href="https://docs.google.com/spreadsheets/d/1CozMxgpMO9sUA40260WSrGEgRzZTJbogzMhK27Z9-dI/edit?gid=1152114867#gid=1152114867" target="_blank"
+        style="display:flex;align-items:center;justify-content:center;gap:10px;background:var(--orange);color:white;font-weight:700;font-size:16px;padding:18px 32px;border-radius:6px;text-decoration:none;box-shadow:0 4px 14px rgba(240,90,40,.3);">
+        Open Inwerkschema Advertising →
+      </a>
+    </div>`;
+}
+
+// ── INWERKSCHEMA SEO ──
+function showInwerkSEO() {
+  document.getElementById("topbar-actions").innerHTML = ``;
+  document.getElementById("main-content").innerHTML = `
+    <div style="max-width:600px">
+      <a href="https://docs.google.com/spreadsheets/d/1Pg10KddhMTv8QlcsRB0fiWTNEuG60v_OzMZ9UA1KNv8/edit?gid=0#gid=0" target="_blank"
+        style="display:flex;align-items:center;justify-content:center;gap:10px;background:var(--orange);color:white;font-weight:700;font-size:16px;padding:18px 32px;border-radius:6px;text-decoration:none;box-shadow:0 4px 14px rgba(240,90,40,.3);">
+        Open Inwerkschema SEO / CXO →
+      </a>
+    </div>`;
+}
+
+// ── SYSTEMEN ──
+function showSystemen() {
+  document.getElementById("topbar-actions").innerHTML = ``;
+  document.getElementById("main-content").innerHTML = `
+    <div style="max-width:800px">
+      <div class="welcome-banner" style="background:linear-gradient(135deg,#0D2B33 0%,#1F4D5C 100%);">
+        <div class="wb-left">
+          <div class="wb-greeting">Systeem Uitleg</div>
+          <div class="wb-name">Simplicate vs. HR Portaal <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg></div>
+          <div class="wb-sub">Waar vind je wat? En waar moet je je zaken registreren?</div>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="card" style="border-top:4px solid var(--blue)">
+          <div class="card-header"><div class="card-title">Simplicate (CRM)</div></div>
+          <div class="card-body" style="font-size:13px;color:var(--dark-2);line-height:1.7;">
+            <p style="margin-bottom:12px;"><strong>Simplicate</strong> is ons operationele hart.</p>
+            <ul style="padding-left:16px;margin-bottom:12px;">
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> <strong>Uren schrijven:</strong> Registratie van je gewerkte uren op projecten.</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M17 8C8 10 5.9 16.17 3.82 22"/><path d="M8 10C9 4.8 15 3 18 2c-1 3.5-5.5 5-7 8"/><path d="M18 2c3 5 2.5 10 0 14"/><path d="M12 22v-8"/></svg> <strong>Verlof aanvragen:</strong> Via module Uren → Verlof.</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> <strong>Klantdossiers:</strong> Alle projecten, contactgegevens en offertes.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card" style="border-top:4px solid var(--orange)">
+          <div class="card-header"><div class="card-title">Interne Omgeving (Dit portaal)</div></div>
+          <div class="card-body" style="font-size:13px;color:var(--dark-2);line-height:1.7;">
+            <p style="margin-bottom:12px;"><strong>Dit HR Portaal</strong> is het naslagwerk voor alle algemene regels en cultuur.</p>
+            <ul style="padding-left:16px;margin-bottom:12px;">
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> <strong>Bedrijfsgids:</strong> Huisregels, reiskosten, arbeidsvoorwaarden.</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> <strong>HR-assistent:</strong> Snel vragen stellen via de chatbot.</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>️ <strong>Overzichten:</strong> Corveerooster en kalender.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ── KALENDER ──
+let currentMonth = 3;
+let currentYear  = 2026;
+
+const kalenderData = {
+  "2026-01-01": [{type:"holiday",title:"Nieuwjaarsdag"}],
+  "2026-04-06": [{type:"holiday",title:"Tweede paasdag"}],
+  "2026-04-27": [{type:"holiday",title:"Koningsdag"}],
+  "2026-05-05": [{type:"holiday",title:"Bevrijdingsdag (lustrum)"}],
+  "2026-05-14": [{type:"holiday",title:"Hemelvaartsdag"}],
+  "2026-05-25": [{type:"holiday",title:"Tweede pinksterdag"}],
+  "2026-11-21": [{type:"office", title:"🎂 Verjaardag Lars"}],
+  "2026-12-25": [{type:"holiday",title:"Eerste kerstdag"}],
+  "2026-12-26": [{type:"holiday",title:"Tweede kerstdag"}],
+};
+
+function showKalender() {
+  document.getElementById("topbar-actions").innerHTML = `<button class="btn btn-white" onclick="currentMonth=3;currentYear=2026;renderCalendar();">Naar Vandaag</button>`;
+  document.getElementById("main-content").innerHTML = `
+    <div style="max-width:1100px;">
+      <div style="margin-bottom:20px;">
+        <h2 style="font-size:22px;color:var(--dark);margin-bottom:4px;">Feestdagen & Evenementen</h2>
+        <p style="color:var(--muted);font-size:13px;">Officiële vrije dagen en onze wekelijkse kantoorroutines (Weekstart en VrijMiBo).</p>
+      </div>
+      <div class="calendar-wrapper">
+        <div class="cal-header">
+          <button class="cal-btn" onclick="changeMonth(-1)">&#9664; Vorige</button>
+          <div class="cal-title" id="cal-title">...</div>
+          <button class="cal-btn" onclick="changeMonth(1)">Volgende &#9654;</button>
+        </div>
+        <div class="cal-days">
+          <div class="cal-day-name">Ma</div><div class="cal-day-name">Di</div><div class="cal-day-name">Wo</div>
+          <div class="cal-day-name">Do</div><div class="cal-day-name">Vr</div><div class="cal-day-name">Za</div><div class="cal-day-name">Zo</div>
+        </div>
+        <div class="cal-dates" id="cal-dates"></div>
+      </div>
+      <div style="margin-top:16px;font-size:13px;color:var(--dark);padding:12px;background:var(--blue-light);border-radius:8px;border:1px solid var(--border);">
+        <strong><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M3 11v3a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-3"/><path d="M12 19H4a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-3.83"/><path d="m3 11 7.77-6.04a2 2 0 0 1 2.46 0L21 11H3z"/></svg> Let op:</strong> De gezamenlijke kantoorlunch vindt elke werkdag plaats tussen 12:00 en 13:00 uur.
+      </div>
+      <div style="display:flex;gap:16px;margin-top:16px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);"><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:var(--success-bg);border:1px solid #B8E2CE;"></span>Officiële Feestdag</div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);"><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:var(--warn-bg);border:1px solid #FAE0A0;"></span>Evenement / Borrel</div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);"><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:var(--blue-lighter);border:1px solid var(--border);"></span>Wekelijkse Routine</div>
+      </div>
+    </div>`;
+  renderCalendar();
+}
+
+function changeMonth(dir) {
+  currentMonth += dir;
+  if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+  if (currentMonth < 0)  { currentMonth = 11; currentYear--; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const title   = document.getElementById('cal-title');
+  const datesEl = document.getElementById('cal-dates');
+  if (!datesEl) return;
+  const monthNames = ["Januari","Februari","Maart","April","Mei","Juni","Juli","Augustus","September","Oktober","November","December"];
+  title.textContent = monthNames[currentMonth] + " " + currentYear;
+  let firstDay = new Date(currentYear, currentMonth, 1).getDay();
+  if (firstDay === 0) firstDay = 7;
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  let html = '';
+  for (let i = 1; i < firstDay; i++) html += '<div class="cal-date empty"></div>';
+  const today = new Date(2026, 3, 9);
+  for (let i = 1; i <= daysInMonth; i++) {
+    const isToday   = (i === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear()) ? 'today' : '';
+    const dow       = new Date(currentYear, currentMonth, i).getDay();
+    const isWeekend = (dow === 0 || dow === 6) ? 'weekend' : '';
+    const dateStr   = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+    let eventsHtml  = '';
+    if (dow >= 1 && dow <= 5) {
+      if (dow === 1) eventsHtml += `<div class="evt-badge evt-routine"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg> Weekstart (08:30)</div>`;
+      if (dow === 5) eventsHtml += `<div class="evt-badge evt-office"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M17 11h1a3 3 0 0 1 0 6h-1"/><path d="M9 12v6"/><path d="M13 12v6"/><path d="M14 7.5c-1 0-1.44.5-3 .5s-2-.5-3-.5-1.72.5-2.5.5a2.5 2.5 0 0 1 0-5c.78 0 1.57.5 2.5.5S9.44 3 11 3s2 .5 3 .5 1.72-.5 2.5-.5a2.5 2.5 0 0 1 0 5c-.78 0-1.5-.5-2.5-.5z"/></svg> VrijMiBo (16:00)</div>`;
+    }
+    if (kalenderData[dateStr]) {
+      kalenderData[dateStr].forEach(evt => {
+        const cls  = evt.type === 'holiday' ? 'evt-holiday' : 'evt-office';
+        const icon = evt.type === 'holiday' ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"/><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2z"/></svg>' : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+        eventsHtml += `<div class="evt-badge ${cls}">${icon} ${evt.title}</div>`;
+      });
+    }
+    html += `<div class="cal-date ${isToday} ${isWeekend}"><div class="cal-date-num">${i}</div>${eventsHtml}</div>`;
+  }
+  datesEl.innerHTML = html;
+}
+
+// ── BEDRIJFSGIDS ──
+function showGids() {
+  document.getElementById("topbar-actions").innerHTML = ``;
+  const navItems = [
+    {id:'welkom',    icon:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>', label:'Welkom bij daar-om'},
+    {id:'kernwaard', icon:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>', label:'Kernwaarden'},
+    {id:'praktisch', icon:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>', label:'Praktische info'},
+    {id:'huisregels',icon:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>', label:'Huisregels'},
+    {id:'vakantie',  icon:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>', label:'Vakantie & feestdagen'},
+    {id:'verlof',    icon:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M17 8C8 10 5.9 16.17 3.82 22"/><path d="M8 10C9 4.8 15 3 18 2c-1 3.5-5.5 5-7 8"/><path d="M18 2c3 5 2.5 10 0 14"/><path d="M12 22v-8"/></svg>', label:'Verlofsoorten'},
+    {id:'ziek',      icon:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M4.5 6.5a7 7 0 1 1 11 5.77V20a2 2 0 0 1-4 0v-1h-2v1a2 2 0 0 1-4 0v-7.73A7 7 0 0 1 4.5 6.5z"/></svg>', label:'Ziek melden'},
+    {id:'arb',       icon:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>', label:'Arbeidsvoorwaarden'},
+    {id:'reiskosten',icon:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v9a2 2 0 0 1-2 2h-2"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>', label:'Reiskosten'},
+    {id:'gedrag',    icon:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>', label:'Gedragsregels'}
+  ];
+  const nav = navItems.map((n,i) =>
+    `<div class="gids-nav-item ${i===0?'active':''}" onclick="gNav(this,'${n.id}')">${n.icon} ${n.label}</div>`
+  ).join('');
+  document.getElementById("main-content").innerHTML = `
+    <div class="gids-layout">
+      <div class="gids-nav">
+        <div class="gids-nav-header">Inhoud</div>${nav}
+      </div>
+      <div id="gids-content-area">${buildGidsContent()}</div>
+    </div>`;
+}
+
+function gNav(el, id) {
+  document.querySelectorAll('.gids-nav-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+  const target = document.getElementById('gs-' + id);
+  if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function gs(id, icon, title, sub, body) {
+  return `<div class="gids-section" id="gs-${id}" style="margin-bottom:16px">
+    <div class="gids-section-header"><div class="gids-icon">${icon}</div><div><div class="gids-section-title">${title}</div><div class="gids-section-sub">${sub}</div></div></div>
+    <div class="gids-body">${body}</div></div>`;
+}
+
+function ri(title, text) {
+  return `<div class="regel-item"><div class="regel-title">${title}</div><div class="regel-text">${text}</div></div>`;
+}
+
+function infoCard(label, value, sub='') {
+  return `<div style="background:var(--blue-lighter);padding:12px;border-radius:8px;border:1px solid var(--border);">
+    <div style="font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:700;">${label}</div>
+    <div style="font-size:15px;font-weight:700;color:var(--dark);margin:4px 0;">${value}</div>
+    ${sub ? `<div style="font-size:11px;color:var(--muted-2);">${sub}</div>` : ''}
+  </div>`;
+}
+
+function verlofRow(type, duur, betaald, kleur) {
+  const colors = { green:['var(--success-bg)','var(--success)'], blue:['var(--blue-light)','var(--blue-dark)'], amber:['var(--warn-bg)','var(--warn)'], gray:['var(--bg)','var(--muted)'] };
+  const [bg, col] = colors[kleur] || colors.gray;
+  return `<div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border)">
+    <div style="flex:1;font-size:13px;font-weight:600;color:var(--dark)">${type}</div>
+    <div style="font-size:12px;color:var(--muted);flex:1">${duur}</div>
+    <span style="font-size:11px;font-weight:600;padding:3px 9px;border-radius:5px;background:${bg};color:${col}">${betaald}</span>
+  </div>`;
+}
+
+function buildGidsContent() {
+  const s_welkom = gs('welkom','<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>','Welkom bij daar-om.nl','Jouw online groei is onze missie',
+    `<div style="background:linear-gradient(135deg,#0B2B35 0%,#1E9CBF 100%);border-radius:12px;padding:24px 28px;margin-bottom:20px;">
+      <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Welkom aan boord</div>
+      <div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:8px">Fijn dat je er bent! <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"/><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2z"/></svg></div>
+      <div style="font-size:13px;color:rgba(255,255,255,.75);line-height:1.7;max-width:480px">In deze Bedrijfsgids vind je alles wat je nodig hebt als medewerker of stagiaire bij daar-om.nl.</div>
+    </div>`);
+  const s_kw = gs('kernwaard','<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>','Onze kernwaarden','De basis van onze bedrijfscultuur',
+    `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div style="padding:15px;border-radius:8px;border:1px solid #FDDDD3;background:#FEF0EB"><div style="font-weight:700;margin-bottom:5px;color:var(--orange)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-1"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg> Teamplayer</div><div style="font-size:13px">"Ik beleef tegenslagen én successen als een teamprestatie."</div></div>
+      <div style="padding:15px;border-radius:8px;border:1px solid #C5D8F5;background:#EBF1FC"><div style="font-weight:700;margin-bottom:5px;color:#1850A8"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Dynamisch</div><div style="font-size:13px">"Ik pas me snel aan veranderingen aan."</div></div>
+      <div style="padding:15px;border-radius:8px;border:1px solid #B8E2CE;background:#E0F5EC"><div style="font-weight:700;margin-bottom:5px;color:var(--success)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg> Ambitieus</div><div style="font-size:13px">"Ik blijf mezelf ontwikkelen."</div></div>
+      <div style="padding:15px;border-radius:8px;border:1px solid #FAE0A0;background:#FFF4DC"><div style="font-weight:700;margin-bottom:5px;color:var(--warn)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Toegankelijk</div><div style="font-size:13px">"Ik spreek en hoor collega's respectvol aan."</div></div>
+    </div>`);
+  const s_praktisch = gs('praktisch','<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>','Praktische informatie','Dagelijkse zaken op kantoor',
+    ri('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg> Lunch','Dagelijks verzorgd door daar-om.nl. De lunchpauze bedraagt minimaal een half uur tussen 12:00 en 13:00 uur. Eten doen we in de kantine, niet op de werkvloer.')
+    + ri('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M17 11h1a3 3 0 0 1 0 6h-1"/><path d="M9 12v6"/><path d="M13 12v6"/><path d="M14 7.5c-1 0-1.44.5-3 .5s-2-.5-3-.5-1.72.5-2.5.5a2.5 2.5 0 0 1 0-5c.78 0 1.57.5 2.5.5S9.44 3 11 3s2 .5 3 .5 1.72-.5 2.5-.5a2.5 2.5 0 0 1 0 5c-.78 0-1.5-.5-2.5-.5z"/></svg> VrijMiBo','Frisdrank, alcoholische dranken en snacks zijn alleen bedoeld voor de Vrij MiBo.')
+    + ri('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M3 11l19-9v18L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg> Weekstart','Elke week is er op maandag om 08:30 een weekstart in de centrale ruimte/kantine.')
+    + ri('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Declaraties','Het declaratieformulier dient vóór de 10e van iedere maand ingediend te worden. Declaraties ouder dan 3 maanden worden niet in behandeling genomen.')
+    + ri('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg> Koffie & thee','Er is een Espresso koffiemachine "Salento Calista". Zorg dat je je lege bekers altijd in de afwasmachine laat.'));
+  const s_huis = gs('huisregels','<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>','Huisregels','Afspraken voor een prettige werkomgeving',
+    ri('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Representatie','Zakelijke kleding, althans een representatief uiterlijk.')
+    + ri('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><path d="m3 21 3-8"/><path d="m21 21-3-8"/><path d="M9 13h6"/></svg> Clean desk policy','Bureau\'s dienen na afloop van de werkdag zo netjes mogelijk achtergelaten te worden.')
+    + ri('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M18 12H2v4h16"/><path d="M22 12h-2"/><path d="M20 6c0 2-2 3-2 6"/></svg> Rookbeleid','Alleen buiten kantoor roken. Absoluut verboden bij de voordeur en binnen.')
+    + ri('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M17 11h1a3 3 0 0 1 0 6h-1"/><path d="M9 12v6"/><path d="M13 12v6"/><path d="M14 7.5c-1 0-1.44.5-3 .5s-2-.5-3-.5-1.72.5-2.5.5a2.5 2.5 0 0 1 0-5c.78 0 1.57.5 2.5.5S9.44 3 11 3s2 .5 3 .5 1.72-.5 2.5-.5a2.5 2.5 0 0 1 0 5c-.78 0-1.5-.5-2.5-.5z"/></svg> Alcohol & drugs','Op werkdagen geen alcohol (buiten borrels om). Zero-tolerance-beleid ten aanzien van drugs.')
+    + ri('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg> Geheimhouding','Werknemers zijn gehouden tot volstrekte geheimhouding over cliënten en in behandeling zijnde zaken.'));
+  const s_vakantie = gs('vakantie','<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>','Vakantie & feestdagen','Vakantiedagen, feestdagen en thuiswerken',
+    `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+      ${infoCard('Vakantiedagen','25 dagen per jaar','Op fulltime basis (40 uur/week)')}
+      ${infoCard('Collectieve dagen','Max. 3 dagen','Door werkgever aangewezen')}
+      ${infoCard('Bovenwettelijk','Vervallen na 6 mnd','Na einde kalenderjaar')}
+      ${infoCard('Vakantietoeslag','8% bruto jaarsalaris','Uitbetaald in mei')}
+    </div>
+    <div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Officiële feestdagen (vrij met behoud van salaris)</div>
+    <div style="display:flex;flex-wrap:wrap;gap:7px">
+      ${['Nieuwjaarsdag','Tweede paasdag','Koningsdag','Hemelvaartsdag','Tweede pinksterdag','1e en 2e kerstdag','Bevrijdingsdag (lustrumjaren)'].map(d=>`<span style="font-size:12px;font-weight:600;background:var(--blue-light);color:var(--blue-dark);padding:4px 11px;border-radius:5px">${d}</span>`).join('')}
+    </div>`);
+  const verlofHeader = `<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:2px solid var(--border);font-size:11px;font-weight:700;color:var(--muted-2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px">
+    <div style="flex:1">Verlofsoort</div><div style="flex:1">Duur</div><div>Betaling</div></div>`;
+  const s_verlof = gs('verlof','<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M17 8C8 10 5.9 16.17 3.82 22"/><path d="M8 10C9 4.8 15 3 18 2c-1 3.5-5.5 5-7 8"/><path d="M18 2c3 5 2.5 10 0 14"/><path d="M12 22v-8"/></svg>','Verlofsoorten (Bijzonder verlof)','Alle soorten verlof op een rij',
+    verlofHeader
+    + verlofRow('Zwangerschaps-/bevallingsverlof','16 weken','100% doorbetaald','green')
+    + verlofRow('Calamiteitenverlof','Afhankelijk van noodsituatie','100% doorbetaald','green')
+    + verlofRow('Kortdurend zorgverlof','Max. 2x arbeidsduur per week','70% doorbetaald','amber')
+    + verlofRow('Langdurend zorgverlof','Max. 6x arbeidsduur per week','Onbetaald','gray')
+    + verlofRow('Eigen huwelijk','2 dagen','100% doorbetaald','green')
+    + verlofRow('Ondertrouw van de werknemer','1 dag','100% doorbetaald','green')
+    + verlofRow('Huwelijk kind / (schoon)ouder / broer/zus','1 dag','100% doorbetaald','green')
+    + verlofRow('Bevalling partner','1 week','100% doorbetaald','green')
+    + verlofRow('Overlijden partner / kind','Dag overlijden t/m 2 dagen na begrafenis','100% doorbetaald','green')
+    + verlofRow('Overlijden (schoon)ouder','Dag overlijden en dag van begrafenis','100% doorbetaald','green')
+    + verlofRow('Verhuizing','1 dag','100% doorbetaald','green')
+    + verlofRow('Huis-/tandartsbezoek','3 uur per jaar','100% doorbetaald','blue'));
+  const s_ziek = gs('ziek','<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M4.5 6.5a7 7 0 1 1 11 5.77V20a2 2 0 0 1-4 0v-1h-2v1a2 2 0 0 1-4 0v-7.73A7 7 0 0 1 4.5 6.5z"/></svg>','Ziek melden','Ziekmeldingsprocedure voor medewerkers',
+    `<div style="display:flex;flex-direction:column;gap:0">
+      <div style="padding:10px 0;border-bottom:1px solid var(--border)"><div style="display:inline-block;width:24px;height:24px;background:var(--blue);color:white;border-radius:50%;text-align:center;line-height:24px;font-weight:bold">1</div> <strong>Melden:</strong> Tussen 08:00 en 08:30 telefonisch ziek melden bij Werkgever.</div>
+      <div style="padding:10px 0;border-bottom:1px solid var(--border)"><div style="display:inline-block;width:24px;height:24px;background:var(--blue);color:white;border-radius:50%;text-align:center;line-height:24px;font-weight:bold">2</div> <strong>E-mail:</strong> Bevestigen via ziek-beter@daar-om.nl.</div>
+      <div style="padding:10px 0"><div style="display:inline-block;width:24px;height:24px;background:var(--blue);color:white;border-radius:50%;text-align:center;line-height:24px;font-weight:bold">3</div> <strong>Beter melden:</strong> Werkhervatting ook melden.</div>
+    </div>
+    <div style="margin-top:14px;background:var(--blue-lighter);border-radius:9px;padding:14px 16px;border:1px solid var(--border)">
+      <div style="font-size:12px;font-weight:700;color:var(--dark-2);margin-bottom:8px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg> Bij langdurige ziekte</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.7">• Eerste jaar: <strong>100% salaris</strong> doorbetaald<br>• Tweede jaar: <strong>70% salaris</strong> doorbetaald<br>• Arbodienstverlener: <strong>ArboNed</strong></div>
+    </div>`);
+  const s_arb = gs('arb','<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>','Arbeidsvoorwaarden','Contracten, werktijden en secundaire voorwaarden',
+    `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
+      ${infoCard('Werktijden','08:30 tot 17:00 uur','40 uren per week')}
+      ${infoCard('Lunchpauze','Minimaal een half uur','Tussen 12:00 en 13:00 uur')}
+      ${infoCard('Proeftijd','1 of 2 maanden','')}
+      ${infoCard('Opzegtermijn','Eén maand','')}
+    </div>
+    ${ri('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><path d="M2 11h20"/></svg> Pensioenregeling','Collectieve pensioenregeling (Allianz/Rabo PGGM PPI). Werkgever en werknemer betalen allebei de helft van de premie.')}
+    ${ri('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Overwerk','Overwerk in spoedeisende gevallen behoort tot de normale werkzaamheden zonder overwerkvergoeding.')}`);
+  const s_reis = gs('reiskosten','<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v9a2 2 0 0 1-2 2h-2"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>','Reiskosten','Woon-werk en zakelijke kilometers',
+    `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+      ${infoCard('Vergoeding vanaf','Boven 10 km (enkele reis)','')}
+      ${infoCard('Maximum','40 km enkele reis','Max. €165 per maand')}
+      ${infoCard('Tarief 2026','€ 0,23 per kilometer','')}
+    </div>
+    ${ri('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3"/><circle cx="7" cy="18" r="2"/><path d="M9 18h5"/><circle cx="16" cy="18" r="2"/></svg> Openbaar vervoer','Het tweede klasse tarief wordt vergoed.')}`);
+  const s_gedrag = gs('gedrag','<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>','Gedragsregels','Social media, privacy en klachten',
+    ri('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Social Media','Feiten die op internet gezet worden berusten altijd op de waarheid. Privacy van klanten en collega\'s wordt gerespecteerd.')
+    + ri('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg> Portretfoto\'s','Werkgever verwerkt (portret)foto\'s van werknemer voor de website en social media. Toestemming kan te allen tijde worden ingetrokken.')
+    + `<div style="margin-top:12px;padding:12px 14px;background:var(--danger-bg);border-radius:8px;border-left:3px solid var(--danger);font-size:12px;color:var(--danger)">
+      <strong>Klachten over ongewenste omgangsvormen</strong> worden schriftelijk ingediend bij de leidinggevende. Anonieme klachten worden niet in behandeling genomen.
+    </div>`);
+  return s_welkom + s_kw + s_praktisch + s_huis + s_vakantie + s_verlof + s_ziek + s_arb + s_reis + s_gedrag;
+}
+
+// ── MEDEWERKER VAN DE MAAND ──
+// ════════════════════════════════════════════════════════
+// DATA — Ericka past hier maandelijks de winnaar aan
+// en voegt winnaars toe aan de hallOfFame array
+// ════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════
+// DATA — Ericka vult hier de winnaar in zodra die gekozen is.
+// Zet currentWinner op null zolang er nog geen winnaar is.
+// Voeg winnaars toe aan hallOfFame na afloop van de maand.
+// ════════════════════════════════════════════════════════
+const currentWinner = null; // Nog niet gekozen — vul hier de winnaar in als het zover is
+
+const hallOfFame = []; // Nog geen winnaars — voeg ze hier toe na elke maand
+
+// Avatar-kleur op basis van naam
+const avatarColors = ["#1E9CBF","#F05A28","#1A7A50","#7B5EA7","#157A98","#C8421A","#2BA8C8","#8A5800"];
+function getAvatarColor(naam) {
+  let hash = 0;
+  for (let c of naam) hash += c.charCodeAt(0);
+  return avatarColors[hash % avatarColors.length];
+}
+
+function renderSpotlight() {
+  const el = document.getElementById('mvdm-spotlight');
+  if (!el) return;
+
+  if (!currentWinner) {
+    // Nog geen winnaar — toon een uitnodiging om te nomineren
+    el.innerHTML = `
+      <div style="background:linear-gradient(135deg,#0B2B35 0%,#1E9CBF 100%);border-radius:14px;padding:22px 28px;margin-bottom:14px;display:flex;align-items:center;gap:22px;position:relative;overflow:hidden;">
+        <div style="position:absolute;right:-30px;top:-30px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.05)"></div>
+        <div style="width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0;border:3px solid rgba(255,255,255,.2);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <div style="flex:1;position:relative;z-index:1;">
+          <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px;">Nieuw dit jaar</div>
+          <div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:4px;">Medewerker van de Maand</div>
+          <div style="font-size:13px;color:rgba(255,255,255,.7);">De eerste winnaar moet nog worden gekozen. Ken jij een collega die het verdient? Nomineer diegene!</div>
+        </div>
+        <button onclick="navClick(document.querySelectorAll('.nav-item')[3],'Medewerker van de Maand',showMvdM);setTimeout(()=>{const el=document.getElementById('nom-stap1');if(el)el.scrollIntoView({behavior:'smooth'});},200);"
+          style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:white;padding:9px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;flex-shrink:0;white-space:nowrap;">
+          Nomineer nu →
+        </button>
+      </div>`;
+    return;
+  }
+
+  const w     = currentWinner;
+  const color = getAvatarColor(w.naam);
+  el.innerHTML = `
+    <div style="background:linear-gradient(135deg,#0B2B35 0%,#1E9CBF 100%);border-radius:14px;padding:22px 28px;margin-bottom:14px;display:flex;align-items:center;gap:22px;position:relative;overflow:hidden;">
+      <div style="position:absolute;right:-30px;top:-30px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.05)"></div>
+      <div style="width:64px;height:64px;border-radius:50%;background:${color};display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:white;flex-shrink:0;border:3px solid rgba(255,255,255,.3);">
+        ${w.naam.charAt(0)}
+      </div>
+      <div style="flex:1;position:relative;z-index:1;">
+        <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Medewerker van de Maand — ${w.maand}</div>
+        <div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:2px;">${w.naam}</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.7);">${w.functie}</div>
+      </div>
+      <button onclick="navClick(document.querySelectorAll('.nav-item')[3],'Medewerker van de Maand',showMvdM);setTimeout(()=>{const el=document.getElementById('nom-stap1');if(el)el.scrollIntoView({behavior:'smooth'});},200);"
+        style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:white;padding:9px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;flex-shrink:0;white-space:nowrap;">
+        Bekijk & Nomineer →
+      </button>
+    </div>`;
+}
+
+function showMvdM() {
+  document.getElementById("topbar-actions").innerHTML = ``;
+
+  const w     = currentWinner;
+  const color = w ? getAvatarColor(w.naam) : '#1E9CBF';
+
+  // Hall of Fame HTML
+  let hofHTML = '';
+  hallOfFame.forEach((person, i) => {
+    const c = getAvatarColor(person.naam);
+    hofHTML += `
+      <div style="display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--border);">
+        <div style="position:relative;flex-shrink:0;">
+          <div style="width:48px;height:48px;border-radius:50%;background:${c};display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:white;">
+            ${person.naam.charAt(0)}
+          </div>
+          <div style="position:absolute;bottom:-2px;right:-2px;background:#F0C040;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;border:2px solid white;">
+            ${i === 0 ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/><text x="9.5" y="11" font-size="7" fill="currentColor" stroke="none" font-weight="bold">1</text></svg>' : i === 1 ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/><text x="9.5" y="11" font-size="7" fill="currentColor" stroke="none" font-weight="bold">2</text></svg>' : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/><text x="9.5" y="11" font-size="7" fill="currentColor" stroke="none" font-weight="bold">3</text></svg>'}
+          </div>
+        </div>
+        <div style="flex:1;">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:3px;">
+            <span style="font-size:14px;font-weight:700;color:var(--dark);">${person.naam}</span>
+            <span style="font-size:11px;background:var(--bg);color:var(--muted);padding:2px 8px;border-radius:10px;font-weight:600;">${person.functie}</span>
+            <span style="font-size:11px;background:var(--blue-light);color:var(--blue-dark);padding:2px 8px;border-radius:10px;font-weight:600;">${person.maand}</span>
+          </div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.6;">"${person.reden}"</div>
+          <div style="font-size:11px;color:var(--muted-2);margin-top:4px;">Genomineerd door: ${person.genomineerd_door}</div>
+        </div>
+      </div>`;
+  });
+
+  document.getElementById("main-content").innerHTML = `
+    <div style="max-width:900px;">
+
+      <!-- HEADER -->
+      <div class="welcome-banner" style="background:linear-gradient(135deg,#C8421A 0%,#F05A28 60%,#F0A028 100%);padding:10px 16px;border-radius:8px;margin-bottom:14px;">
+        <div class="wb-left">
+          <div class="wb-greeting">Collega's & Organisatie</div>
+          <div class="wb-name"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Medewerker van de Maand</div>
+          <div class="wb-sub">Erkenning voor collega's die elke maand het verschil maken. Nomineer iemand of bekijk de Hall of Fame.</div>
+        </div>
+      </div>
+
+      <!-- HUIDIGE WINNAAR -->
+      ${currentWinner ? `
+      <div style="background:white;border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px;box-shadow:0 2px 12px rgba(14,90,115,.08);">
+        <div style="background:linear-gradient(135deg,#0B2B35 0%,#1E9CBF 100%);padding:16px 22px;display:flex;align-items:center;gap:10px;">
+          <span style="font-size:18px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg></span>
+          <span style="font-size:14px;font-weight:700;color:white;">Winnaar ${w.maand}</span>
+        </div>
+        <div style="padding:24px;display:flex;gap:20px;align-items:flex-start;">
+          <div style="width:80px;height:80px;border-radius:50%;background:${color};display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;color:white;flex-shrink:0;border:4px solid var(--blue-light);">
+            ${w.naam.charAt(0)}
+          </div>
+          <div style="flex:1;">
+            <div style="font-size:22px;font-weight:800;color:var(--dark);margin-bottom:3px;">${w.naam}</div>
+            <div style="display:inline-block;background:var(--bg);color:var(--muted);font-size:12px;font-weight:600;padding:4px 12px;border-radius:10px;margin-bottom:14px;">${w.functie}</div>
+            <div style="font-size:14px;color:var(--dark-2);line-height:1.7;font-style:italic;border-left:3px solid var(--orange);padding-left:14px;">"${w.reden}"</div>
+            <div style="font-size:12px;color:var(--muted-2);margin-top:10px;">Genomineerd door: <strong>${w.genomineerd_door}</strong></div>
+          </div>
+        </div>
+      </div>` : `
+      <div style="background:white;border:2px dashed var(--border);border-radius:14px;padding:28px;margin-bottom:20px;text-align:center;">
+        <div style="font-size:48px;margin-bottom:12px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg></div>
+        <div style="font-size:18px;font-weight:700;color:var(--dark);margin-bottom:6px;">Nog geen winnaar deze maand</div>
+        <div style="font-size:13px;color:var(--muted);max-width:420px;margin:0 auto 16px;line-height:1.6;">De eerste Medewerker van de Maand moet nog worden gekozen. Nomineer hieronder een collega die het verdient!</div>
+        <div style="display:inline-flex;align-items:center;gap:6px;background:var(--blue-light);color:var(--blue-dark);padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M12 18V6"/><path d="m6 12 6 6 6-6"/></svg> Scroll naar beneden om te nomineren
+        </div>
+      </div>`}
+
+      <!-- NOMINEER EEN COLLEGA -->
+      <div style="background:white;border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px;box-shadow:0 2px 12px rgba(14,90,115,.08);">
+        <div style="background:var(--blue-lighter);padding:16px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;">
+          <span style="font-size:18px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+          <span style="font-size:14px;font-weight:700;color:var(--dark);">Nomineer een Collega</span>
+        </div>
+        <div style="padding:22px;">
+          <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6;">
+            Ken jij een collega die deze maand echt het verschil heeft gemaakt? Klik op diegene hieronder, vertel waarom en verstuur je nominatie. Alle nominaties komen binnen bij Ericka.
+          </p>
+
+          <!-- STAP 1: Kies een collega -->
+          <div id="nom-stap1">
+            <div style="font-size:12px;font-weight:700;color:var(--dark-2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px;">
+              Stap 1 — Klik op een collega
+            </div>
+            <div id="nom-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:6px;">
+              ${buildColleagaCards()}
+            </div>
+            <div id="nom-kies-error" style="display:none;margin-top:8px;font-size:12px;color:var(--danger);font-weight:600;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>️ Kies eerst een collega hierboven.
+            </div>
+          </div>
+
+          <!-- STAP 2: Reden + versturen (verborgen tot collega gekozen) -->
+          <div id="nom-stap2" style="display:none;margin-top:20px;border-top:1px solid var(--border);padding-top:20px;">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+              <div id="nom-gekozen-avatar" style="width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:white;flex-shrink:0;"></div>
+              <div>
+                <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">Jouw keuze</div>
+                <div id="nom-gekozen-naam" style="font-size:16px;font-weight:700;color:var(--dark);"></div>
+              </div>
+              <button onclick="resetNominatie()" style="margin-left:auto;background:none;border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;color:var(--muted);cursor:pointer;font-family:inherit;">
+                ✕ Andere keuze
+              </button>
+            </div>
+
+            <label style="display:block;font-size:12px;font-weight:700;color:var(--dark-2);margin-bottom:8px;">
+              Stap 2 — Waarom is deze persoon voor jou de medewerker van de maand? *
+            </label>
+            <textarea id="nom-reden"
+              placeholder="Vertel wat deze collega deze maand bijzonder heeft gemaakt..."
+              style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;min-height:120px;resize:vertical;line-height:1.6;"
+              onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+
+            <div style="display:flex;justify-content:flex-end;margin-top:12px;">
+              <button onclick="submitNominatie()"
+                style="background:linear-gradient(135deg,var(--orange) 0%,var(--orange-dark) 100%);color:white;border:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:8px;">
+                Versturen <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
+              </button>
+            </div>
+
+            <div id="nom-reden-error" style="display:none;margin-top:10px;padding:12px 14px;background:var(--danger-bg);color:var(--danger);border-radius:8px;border-left:3px solid var(--danger);font-size:13px;font-weight:600;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>️ Vertel ons eerst waarom deze collega het verdient!
+            </div>
+          </div>
+
+          <!-- SUCCES -->
+          <div id="nom-success" style="display:none;margin-top:16px;padding:16px;background:var(--success-bg);color:var(--success);border-radius:10px;border-left:4px solid var(--success);font-weight:600;font-size:13px;line-height:1.6;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"/><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2z"/></svg> Bedankt! Je nominatie is verstuurd naar Ericka (ericka@daar-om.nl). Ze neemt alle nominaties aan het einde van de maand door.
+          </div>
+        </div>
+      </div>
+
+      <!-- HALL OF FAME -->
+      <div style="background:white;border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(14,90,115,.08);">
+        <div style="background:linear-gradient(135deg,#8A5800 0%,#C89000 100%);padding:16px 22px;display:flex;align-items:center;gap:10px;">
+          <span style="font-size:18px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg></span>
+          <span style="font-size:14px;font-weight:700;color:white;">Hall of Fame — Vorige Winnaars</span>
+        </div>
+        <div style="padding:6px 22px 16px;">
+          ${hofHTML.length > 0 ? hofHTML : '<p style="color:var(--muted);font-size:13px;padding:16px 0;">Nog geen winnaars toegevoegd.</p>'}
+        </div>
+      </div>
+
+    </div>`;
+}
+
+let geselecteerdeCollega = null;
+
+const allCollegas = [
+  { naam: "Manon Dinkla",        functie: "Projectmanager" },
+  { naam: "Tirza Nab",           functie: "Social specialist" },
+  { naam: "Wolter van der Weide",functie: "Eigenaar" },
+  { naam: "Tim Bodewes",         functie: "Eigenaar" },
+  { naam: "Jesse Joustra",       functie: "Mede-eigenaar BMM" },
+  { naam: "Eline Nijeboer",      functie: "Creatief strateeg" },
+  { naam: "Susan Batterink",     functie: "Social specialist" },
+  { naam: "Aimee Veldman",       functie: "SEO specialist" },
+  { naam: "Laura Mossel",        functie: "SEO & Copywriter" },
+  { naam: "Andries Aalders",     functie: "Advertising" },
+  { naam: "Noa Drenth",          functie: "Advertising" },
+  { naam: "Remco de Jong",       functie: "Advertising & Data" },
+  { naam: "Rémon van der Velde", functie: "Operationeel manager" },
+  { naam: "Iris Brandsma",       functie: "Website developer" },
+  { naam: "Elwina Pluimers",     functie: "Social specialist" },
+  { naam: "Aron van der Graaff", functie: "Mede-eigenaar BMM" },
+  { naam: "Silvan Visscher",     functie: "Website developer" },
+  { naam: "Mark Kranenburg",     functie: "Website developer" },
+  { naam: "Thomas Nomden",       functie: "Teammanager" },
+  { naam: "Shanna Stapersma",    functie: "CRO Specialist" },
+  { naam: "Ericka Urrutia",      functie: "Teammanager talent" },
+  { naam: "Paul Klooster",       functie: "Social & Email" },
+  { naam: "Lars Penninga",       functie: "CRO specialist" },
+  { naam: "Leonie Krol",         functie: "Social specialist" },
+  { naam: "Lasse Joustra",       functie: "Mede-eigenaar BMM" },
+  { naam: "Richard Haaijer",     functie: "Advertising" },
+];
+
+function buildColleagaCards() {
+  return allCollegas.map(c => {
+    const color = getAvatarColor(c.naam);
+    return `<div class="collega-card" onclick="kiesCollega('${c.naam.replace(/'/g, "\'")}','${color}')"
+      style="border:2px solid var(--border);border-radius:10px;padding:12px 8px;text-align:center;cursor:pointer;transition:all .15s;background:white;"
+      onmouseover="this.style.borderColor='var(--blue)';this.style.background='var(--blue-lighter)'"
+      onmouseout="if(!this.classList.contains('geselecteerd')){this.style.borderColor='var(--border)';this.style.background='white'}">
+      <div style="width:40px;height:40px;border-radius:50%;background:${color};display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:white;margin:0 auto 8px;">
+        ${c.naam.charAt(0)}
+      </div>
+      <div style="font-size:12px;font-weight:700;color:var(--dark);line-height:1.3;">${c.naam}</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px;">${c.functie}</div>
+    </div>`;
+  }).join('');
+}
+
+function kiesCollega(naam, color) {
+  geselecteerdeCollega = naam;
+
+  // Alle kaarten resetten, gekozen markeren
+  document.querySelectorAll('.collega-card').forEach(card => {
+    card.classList.remove('geselecteerd');
+    card.style.borderColor = 'var(--border)';
+    card.style.background  = 'white';
+    card.style.transform   = '';
+  });
+  event.currentTarget.classList.add('geselecteerd');
+  event.currentTarget.style.borderColor = 'var(--blue)';
+  event.currentTarget.style.background  = 'var(--blue-lighter)';
+  event.currentTarget.style.transform   = 'scale(1.04)';
+
+  // Vul stap 2 in
+  document.getElementById('nom-gekozen-naam').textContent   = naam;
+  document.getElementById('nom-gekozen-avatar').style.background = color;
+  document.getElementById('nom-gekozen-avatar').textContent = naam.charAt(0);
+  document.getElementById('nom-reden').value                = '';
+  document.getElementById('nom-reden-error').style.display  = 'none';
+
+  // Toon stap 2
+  const stap2 = document.getElementById('nom-stap2');
+  stap2.style.display = 'block';
+  stap2.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  document.getElementById('nom-kies-error').style.display = 'none';
+}
+
+function resetNominatie() {
+  geselecteerdeCollega = null;
+  document.querySelectorAll('.collega-card').forEach(card => {
+    card.classList.remove('geselecteerd');
+    card.style.borderColor = 'var(--border)';
+    card.style.background  = 'white';
+    card.style.transform   = '';
+  });
+  document.getElementById('nom-stap2').style.display   = 'none';
+  document.getElementById('nom-success').style.display = 'none';
+}
+
+function submitNominatie() {
+  const reden = document.getElementById('nom-reden').value.trim();
+  const err   = document.getElementById('nom-reden-error');
+  err.style.display = 'none';
+
+  if (!geselecteerdeCollega) {
+    document.getElementById('nom-kies-error').style.display = 'block';
+    document.getElementById('nom-stap1').scrollIntoView({ behavior: 'smooth' });
+    return;
+  }
+  if (!reden) {
+    err.style.display = 'block';
+    return;
+  }
+
+  // Stuur via mailto naar Ericka
+  const onderwerp = encodeURIComponent('Nominatie Medewerker van de Maand — ' + geselecteerdeCollega);
+  const body      = encodeURIComponent(
+    'Hallo Ericka,\n\n' +
+    'Ik nomineer ' + geselecteerdeCollega + ' als Medewerker van de Maand.\n\n' +
+    'Reden:\n' + reden + '\n\n' +
+    '(Verstuurd via het HR Portaal)'
+  );
+  window.location.href = 'mailto:ericka@daar-om.nl?subject=' + onderwerp + '&body=' + body;
+
+  // Toon succes
+  document.getElementById('nom-success').style.display = 'block';
+  document.getElementById('nom-stap2').style.display   = 'none';
+  resetNominatie();
+}
+
+// ── CHATBOT ──
+// ── ECHTE CLAUDE AI CHATBOT ──
+let chatHistory = [];
+let chatOpen    = false;
+
+// Systeemprompt: de volledige bedrijfsgids als context voor Claude
+const SYSTEM_PROMPT = `Je bent de interne HR-assistent van daar-om.nl, een online marketing bureau in Groningen.
+Je antwoordt altijd in het Nederlands, vriendelijk en to-the-point.
+Je beantwoordt alleen vragen op basis van de onderstaande bedrijfsregels.
+Als iets niet in de regels staat, verwijs je door naar Ericka (ericka@daar-om.nl).
+Gebruik korte alinea's of bullet points. Geen lange lappen tekst.
+
+== BEDRIJFSREGELS DAAR-OM.NL ==
+
+WERKTIJDEN
+- Werktijden: 08:30 tot 17:00 uur, 40 uur per week
+- Lunchpauze: minimaal 30 minuten, tussen 12:00 en 13:00
+- Thuiswerken: pas toegestaan na het eerste dienstjaar, in overleg met leidinggevende
+- Stagiaires werken altijd op kantoor
+
+VAKANTIE & VERLOF
+- 25 vakantiedagen per jaar (op basis van 40 uur)
+- Werkgever kan max. 3 collectieve dagen aanwijzen als verplichte vrije dag
+- Aaneengesloten vakantie: maximaal 15 werkdagen
+- Vakantiedagen aanvragen via Simplicate
+- Vakantietoeslag: 8% van bruto jaarsalaris, uitbetaald in mei
+- Bovenwettelijke vakantiedagen vervallen 6 maanden na het einde van het kalenderjaar
+
+OFFICIËLE FEESTDAGEN (vrij met behoud van salaris)
+- Nieuwjaarsdag, Tweede paasdag, Koningsdag, Hemelvaartsdag, Tweede pinksterdag
+- Eerste en tweede kerstdag
+- Bevrijdingsdag 5 mei alleen in lustrumjaren (2025, 2030, 2035 etc.)
+
+BIJZONDER VERLOF (selectie)
+- Eigen huwelijk: 2 dagen betaald
+- Bevalling partner: 1 week betaald
+- Overlijden partner/kind: dag overlijden t/m 2 dagen na begrafenis, betaald
+- Overlijden (schoon)ouder: dag overlijden + dag begrafenis, betaald
+- Verhuizing: 1 dag betaald
+- Huis-/tandartsbezoek: max. 3 uur per jaar betaald (alleen als buiten werktijd niet mogelijk)
+- Halfjaarlijkse tandarts controles vallen NOOIT onder bijzonder verlof
+
+ZIEK MELDEN
+- Bel tussen 08:00 en 08:30 telefonisch ziek
+- Bevestig per e-mail naar ziek-beter@daar-om.nl
+- Betermelding ook verplicht
+- Eerste ziektejaar: 100% salaris doorbetaald
+- Tweede ziektejaar: 70% salaris doorbetaald
+- Arbodienst: ArboNed
+
+REISKOSTEN
+- Vergoeding bij woon-werk afstand boven 10 km (enkele reis)
+- Maximum: 40 km, tarief €0,23 per km (2026), max. €165 per maand
+- Openbaar vervoer: 2e klasse tarief vergoed
+
+DECLARATIES
+- Indienen vóór de 10e van de maand
+- Declaraties ouder dan 3 maanden worden niet behandeld
+
+ARBEIDSVOORWAARDEN
+- Proeftijd: 1 maand (bij contract 6-24 maanden), 2 maanden (bij onbepaalde tijd)
+- Opzegtermijn: 1 maand, alleen tegen einde van een maand
+- Pensioen: collectieve regeling Allianz/Rabo PGGM PPI, premie 50/50
+- Overwerk in spoedeisende gevallen: geen vergoeding
+
+HUISREGELS
+- Representatieve/zakelijke kleding
+- Clean desk policy
+- Roken alleen buiten, niet bij de voordeur
+- Geen alcohol op werkdagen (borrels uitgezonderd)
+- Zero tolerance drugsbeleid
+- Frisdrank/alcohol alleen voor VrijMiBo
+
+KANTOORINFO
+- Weekstart: elke maandag 08:30 in de kantine
+- VrijMiBo: elke vrijdag vanaf 16:00 in de kantine
+- Lunch: dagelijks tussen 12:00 en 13:00, verzorgd door daar-om.nl
+- Koffie: Salento Calista espressomachine, iedereen verantwoordelijk voor vullen/schoonhouden
+
+SYSTEMEN
+- Uren schrijven en verlof aanvragen: via Simplicate
+- HR-regels en bedrijfsgids: dit portaal
+- Vragen aan Ericka: ericka@daar-om.nl
+
+TEAM (26 medewerkers)
+Manon Dinkla (Projectmanager), Tirza Nab (Social specialist), Wolter van der Weide (Eigenaar),
+Tim Bodewes (Eigenaar), Jesse Joustra (Mede-eigenaar BMM), Eline Nijeboer (Creatief strateeg),
+Susan Batterink (Social specialist), Aimee Veldman (SEO specialist), Laura Mossel (SEO & Copywriter),
+Andries Aalders (Advertising), Noa Drenth (Advertising), Remco de Jong (Advertising & Data),
+Rémon van der Velde (Operationeel manager), Iris Brandsma (Website developer),
+Elwina Pluimers (Social specialist), Aron van der Graaff (Mede-eigenaar BMM),
+Silvan Visscher (Website developer), Mark Kranenburg (Website developer),
+Thomas Nomden (Teammanager daar-so.nl), Shanna Stapersma (CRO Specialist),
+Ericka Urrutia (Teammanager talent ontwikkeling), Paul Klooster (Social & Email),
+Lars Penninga (CRO specialist), Leonie Krol (Social specialist),
+Lasse Joustra (Mede-eigenaar BMM), Richard Haaijer (Advertising specialist)
+`;
+
+function toggleChat() {
+  chatOpen = !chatOpen;
+  document.getElementById('chat-panel').style.display = chatOpen ? 'flex' : 'none';
+  if (chatOpen && chatHistory.length === 0) {
+    addBotMessage('Hoi! <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg> Ik ben de HR-assistent van daar-om.nl. Stel me een vraag over verlof, reiskosten, ziek melden, huisregels of andere bedrijfszaken — ik help je direct verder!');
+  }
+}
+
+function addBotMessage(text) {
+  const msgs = document.getElementById('chat-messages');
+  const div  = document.createElement('div');
+  div.style.cssText = 'display:flex;gap:8px;align-items:flex-start;margin-bottom:12px';
+  div.innerHTML = `<div style="width:28px;height:28px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M9 11V7a3 3 0 0 1 6 0v4"/><circle cx="9" cy="16" r="1" fill="currentColor"/><circle cx="15" cy="16" r="1" fill="currentColor"/><path d="M9.5 21h5"/></svg></div>
+    <div style="background:var(--blue-lighter);border:1px solid var(--border);border-radius:0 10px 10px 10px;padding:10px 13px;font-size:13px;color:var(--dark);line-height:1.6;max-width:85%">${text}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addUserMessage(text) {
+  const msgs = document.getElementById('chat-messages');
+  const div  = document.createElement('div');
+  div.style.cssText = 'display:flex;gap:8px;align-items:flex-start;justify-content:flex-end;margin-bottom:12px';
+  div.innerHTML = `<div style="background:var(--blue);border-radius:10px 0 10px 10px;padding:10px 13px;font-size:13px;color:#fff;line-height:1.6;max-width:85%">${text}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addTypingIndicator() {
+  const msgs = document.getElementById('chat-messages');
+  const div  = document.createElement('div');
+  div.id = 'typing-indicator';
+  div.style.cssText = 'display:flex;gap:8px;align-items:flex-start;margin-bottom:12px';
+  div.innerHTML = `<div style="width:28px;height:28px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M9 11V7a3 3 0 0 1 6 0v4"/><circle cx="9" cy="16" r="1" fill="currentColor"/><circle cx="15" cy="16" r="1" fill="currentColor"/><path d="M9.5 21h5"/></svg></div>
+    <div style="background:var(--blue-lighter);border:1px solid var(--border);border-radius:0 10px 10px 10px;padding:10px 14px;display:flex;gap:5px;align-items:center">
+      <span style="width:7px;height:7px;border-radius:50%;background:var(--blue);display:inline-block;animation:bounce 1s infinite 0s"></span>
+      <span style="width:7px;height:7px;border-radius:50%;background:var(--blue);display:inline-block;animation:bounce 1s infinite .2s"></span>
+      <span style="width:7px;height:7px;border-radius:50%;background:var(--blue);display:inline-block;animation:bounce 1s infinite .4s"></span>
+    </div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+// ── KENNISBANK — uitgebreide keyword chatbot ──
+const kennisbank = [
+
+  // ZIEK MELDEN
+  { tags: ['ziek','ziekmeld','ziekmelding','betermelding','beter melden','niet lekker','griep','arboned','arbo','ziek-beter'],
+    antwoord: `Beterschap! <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M4.5 6.5a7 7 0 1 1 11 5.77V20a2 2 0 0 1-4 0v-1h-2v1a2 2 0 0 1-4 0v-7.73A7 7 0 0 1 4.5 6.5z"/></svg> Zo meld je je ziek:<br><br>
+    <b>1.</b> Bel tussen <b>08:00 en 08:30</b> naar kantoor.<br>
+    <b>2.</b> Stuur daarna een e-mail naar <b>ziek-beter@daar-om.nl</b>.<br>
+    <b>3.</b> Ben je weer beter? Meld je <b>ook</b> beter via datzelfde mailadres.<br><br>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Eerste ziektejaar: 100% salaris. Tweede jaar: 70%. Arbodienst: ArboNed.` },
+
+  // VAKANTIE
+  { tags: ['vakantie','vakantiedag','snipperdag','vrije dag','vrije dagen','vrij nemen','verlof aanvragen','hoeveel dagen','vakantiedagen'],
+    antwoord: `Je vakantieinfo op een rij! <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="10" r="3"/><path d="M12 2v2m0 16v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M2 12h2m16 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg><br><br>
+    • <b>25 vakantiedagen</b> per jaar (o.b.v. 40 uur)<br>
+    • Vakantie aanvragen doe je via <b>Simplicate</b> (module Uren → Verlof)<br>
+    • Aaneengesloten vakantie: max. <b>15 werkdagen</b> in één keer<br>
+    • Werkgever kan max. <b>3 collectieve dagen</b> verplicht aanwijzen<br>
+    • Bovenwettelijke dagen vervallen <b>6 maanden</b> na het kalenderjaar<br>
+    • <b>Vakantietoeslag:</b> 8% van je bruto jaarsalaris, uitbetaald in mei <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>️` },
+
+  // REISKOSTEN
+  { tags: ['reiskosten','reiskostenvergoeding','kilometer','km','vergoeding','ov','trein','bus','auto','woon-werk','forens'],
+    antwoord: `Reiskostenvergoeding 2026 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v9a2 2 0 0 1-2 2h-2"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg><br><br>
+    • Vergoeding alleen bij woon-werkafstand <b>boven 10 km</b> (enkele reis)<br>
+    • Maximum vergoed: <b>40 km</b> enkele reis<br>
+    • Tarief: <b>€ 0,23 per km</b><br>
+    • Maximum per maand: <b>€ 165</b><br>
+    • Met het OV? Dan vergoed op basis van <b>2e klasse</b> tarief<br><br>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Declareer via het declaratieformulier, vóór de 10e van de maand.` },
+
+  // DECLAREREN
+  { tags: ['declar','bonnetje','onkosten','voorschieten','terugbetaal','kosten','rekening'],
+    antwoord: `Zo declareer je onkosten! <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/><path d="M16 8H8m8 4H8m8 4H8"/></svg><br><br>
+    • Dien het declaratieformulier in <b>vóór de 10e</b> van de maand<br>
+    • Declaraties <b>ouder dan 3 maanden</b> worden niet meer behandeld<br>
+    • Zorg voor een duidelijke <b>bon of factuur</b> als bijlage<br><br>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Vragen over declareren? Mail naar Ericka (ericka@daar-om.nl).` },
+
+  // WERKTIJDEN
+  { tags: ['werktijd','hoe laat','begin tijd','eindtijd','kantooruren','openingstijd','8:30','08:30','17:00','uur werk'],
+    antwoord: `De werktijden bij daar-om.nl <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><br><br>
+    • Werktijden: <b>08:30 tot 17:00</b> uur<br>
+    • Werkweek: <b>40 uur</b><br>
+    • Lunchpauze: minimaal <b>30 minuten</b> tussen 12:00 en 13:00<br>
+    • Eten doen we in de <b>kantine</b>, niet op de werkvloer<br><br>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Wil je afwijken van deze tijden? Overleg dat even met Ericka.` },
+
+  // EERDER WEG / FLEXIBEL
+  { tags: ['eerder weg','eerder naar huis','vertrekken','sport','voetbal','training','gym','afspraak','flex','flexibel','later komen','later beginnen'],
+    antwoord: `Eerder weg of later beginnen? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4m-4.93-7.07-2.83 2.83M7.76 16.24l-2.83 2.83m0-14.14 2.83 2.83m9.66 9.66 2.83 2.83"/></svg><br><br>
+    De standaard werktijden zijn <b>08:30 tot 17:00</b>. Wil je hiervan afwijken?<br><br>
+    • Overleg dit altijd eerst met je <b>leidinggevende</b><br>
+    • Sportafspraken vallen <b>niet</b> onder bijzonder verlof<br>
+    • Individuele afspraken zijn mogelijk, maar altijd in onderling overleg<br><br>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Stuur Ericka even een mailtje: <b>ericka@daar-om.nl</b>` },
+
+  // THUISWERKEN
+  { tags: ['thuiswerk','thuis werk','vanuit huis','remote','hybride'],
+    antwoord: `Thuiswerken bij daar-om.nl <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><br><br>
+    • Thuiswerken is <b>pas mogelijk na je eerste dienstjaar</b><br>
+    • Altijd in overleg met je leidinggevende<br>
+    • <b>Stagiaires</b> werken altijd op kantoor — geen thuiswerken<br><br>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Heb je een bijzondere situatie? Bespreek het met Ericka.` },
+
+  // FEESTDAGEN
+  { tags: ['feestdag','vrije dag','pasen','kerst','kerstdag','koningsdag','hemelvaart','pinksteren','nieuwjaar','bevrijding','nationale'],
+    antwoord: `Officiële feestdagen — vrij met behoud van salaris <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"/><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2z"/></svg><br><br>
+    • Nieuwjaarsdag (1 jan)<br>
+    • Tweede paasdag<br>
+    • Koningsdag (27 apr)<br>
+    • Hemelvaartsdag<br>
+    • Tweede pinksterdag<br>
+    • Eerste kerstdag (25 dec)<br>
+    • Tweede kerstdag (26 dec)<br>
+    • Bevrijdingsdag 5 mei — <b>alleen in lustrumjaren</b> (2025, 2030, 2035...)<br><br>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Bekijk ook de <b>Kalender</b> in het linkermenu voor een compleet overzicht!` },
+
+  // BIJZONDER VERLOF
+  { tags: ['bijzonder verlof','huwelijk','trouwen','bruiloft','bevalling','overlijden','begrafenis','sterfgeval','verhuizing','examen','zwangerschapsverlof','zwanger'],
+    antwoord: `Bijzonder verlof — betaald vrij voor bijzondere situaties <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><br><br>
+    • <b>Eigen huwelijk:</b> 2 dagen<br>
+    • <b>Ondertrouw:</b> 1 dag<br>
+    • <b>Huwelijk kind / (schoon)ouder / broer/zus:</b> 1 dag<br>
+    • <b>Bevalling partner:</b> 1 week<br>
+    • <b>Zwangerschapsverlof:</b> 16 weken (100% doorbetaald)<br>
+    • <b>Overlijden partner of kind:</b> dag overlijden t/m 2 dagen na begrafenis<br>
+    • <b>Overlijden (schoon)ouder:</b> dag overlijden + dag begrafenis<br>
+    • <b>Verhuizing:</b> 1 dag<br>
+    • <b>Vakexamen:</b> 1 dag<br><br>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Staat jouw situatie er niet bij? Neem contact op met Ericka.` },
+
+  // TANDARTS / HUISARTS
+  { tags: ['tandarts','huisarts','dokter','specialist','arts','medisch','ziekenhuis','controle','afspraak dokter'],
+    antwoord: `Bezoek aan huisarts of tandarts <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M12 5.5c-1.5-2-4-2.5-5.5-1S4.5 8 5 10c.5 2.5 1.5 4 2.5 5s2.5 2 3 4c.5-2 2-3 3-4s2-2.5 2.5-5c.5-2-.5-4.5-2-5.5S13.5 3.5 12 5.5z"/></svg><br><br>
+    • Plan afspraken <b>zoveel mogelijk buiten werktijd</b><br>
+    • Lukt dat echt niet? Dan heb je recht op max. <b>3 uur buitengewoon verlof per jaar</b><br>
+    • <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>️ <b>Halfjaarlijkse controles</b> bij de tandarts vallen <b>nooit</b> onder bijzonder verlof<br><br>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Probeer afspraken in de vroege ochtend of late middag in te plannen.` },
+
+  // CONTRACT / PROEFTIJD / OPZEGGEN
+  { tags: ['contract','proeftijd','opzeg','ontslag','einde dienstverband','opzegtermijn','contractvorm'],
+    antwoord: `Contract & opzegging <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><br><br>
+    • <b>Proeftijd:</b> 1 maand bij contract van 6-24 maanden<br>
+    • <b>Proeftijd:</b> 2 maanden bij onbepaalde tijd<br>
+    • <b>Opzegtermijn:</b> 1 maand, altijd tegen het <b>einde van de maand</b><br><br>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Vragen over je contract? Neem contact op met Ericka (ericka@daar-om.nl).` },
+
+  // PENSIOEN / SALARIS
+  { tags: ['pensioen','salaris','loon','loonsverhoging','vakantiegeld','toeslag','pensioenregeling','wia'],
+    antwoord: `Salaris & pensioen <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><br><br>
+    • <b>Vakantietoeslag:</b> 8% van bruto jaarsalaris, uitbetaald in <b>mei</b><br>
+    • <b>Pensioen:</b> collectieve regeling via Allianz/Rabo PGGM PPI<br>
+    • Premie wordt <b>50/50</b> betaald door jou en daar-om.nl<br>
+    • Er is ook een collectieve <b>WIA-gatverzekering</b> (premie volledig door daar-om.nl)<br><br>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Vragen over je salaris? Bespreek dit met Ericka.` },
+
+  // VRIJMIBO
+  { tags: ['vrijmibo','vrijmi','borrel','vrijdag middag','vrijdagmiddag','bier','drinken'],
+    antwoord: `VrijMiBo! <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M17 11h1a3 3 0 0 1 0 6h-1"/><path d="M9 12v6"/><path d="M13 12v6"/><path d="M14 7.5c-1 0-1.44.5-3 .5s-2-.5-3-.5-1.72.5-2.5.5a2.5 2.5 0 0 1 0-5c.78 0 1.57.5 2.5.5S9.44 3 11 3s2 .5 3 .5 1.72-.5 2.5-.5a2.5 2.5 0 0 1 0 5c-.78 0-1.5-.5-2.5-.5z"/></svg><br><br>
+    • Elke <b>vrijdag vanaf 16:00</b> in de kantine<br>
+    • Frisdrank en alcoholische dranken zijn speciaal voor de VrijMiBo beschikbaar<br>
+    • Buiten de VrijMiBo: geen alcohol op de werkvloer<br><br>
+    We zien je er graag! <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"/><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2z"/></svg>` },
+
+  // WEEKSTART
+  { tags: ['weekstart','maandag','meeting','overleg','vergadering','standup','week begin'],
+    antwoord: `Weekstart <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M3 11l19-9v18L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg><br><br>
+    • Elke <b>maandag om 08:30</b> in de centrale ruimte (kantine bij de ingang)<br>
+    • Aanwezigheid wordt verwacht<br><br>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Bekijk ook de <b>Kalender</b> in het linkermenu voor alle evenementen!` },
+
+  // LUNCH & CORVEE
+  { tags: ['lunch','corvee','brood','klaarzetten','afwas','tafel','kantine','eten','middageten'],
+    antwoord: `Lunch & corvee <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M3 11v3a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-3"/><path d="M12 19H4a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-3.83"/><path d="m3 11 7.77-6.04a2 2 0 0 1 2.46 0L21 11H3z"/></svg><br><br>
+    • De lunch is dagelijks tussen <b>12:00 en 13:00</b> in de kantine<br>
+    • Eten op de werkvloer is <b>niet</b> toegestaan<br>
+    • Er is een wekelijks <b>corvee rooster</b> voor brood halen, klaarzetten en afwas<br><br>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg> Bekijk het volledige rooster via <b>Corvee Rooster</b> in het linkermenu!` },
+
+  // KOFFIE
+  { tags: ['koffie','thee','espresso','machine','koffiemachine','salento'],
+    antwoord: `Koffie & thee <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg><br><br>
+    • Er staat een <b>Salento Calista</b> espressomachine op kantoor<br>
+    • Iedereen is verantwoordelijk voor het <b>schoonhouden en bijvullen</b><br>
+    • Lege bekers gaan in de afwasmachine — niet laten staan!` },
+
+  // SIMPLICATE
+  { tags: ['simplicate','uren','urenschrijven','uren schrijven','tijdregistratie','crm','systeem'],
+    antwoord: `Simplicate — ons operationele systeem <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg><br><br>
+    • <b>Uren schrijven:</b> registreer je gewerkte uren per project<br>
+    • <b>Verlof aanvragen:</b> via module Uren → Verlof<br>
+    • <b>Declaraties</b> ook indienen via Simplicate<br><br>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>️ Vergeet niet je uren bij te houden — dit wordt maandelijks gecontroleerd!` },
+
+  // HUISREGELS
+  { tags: ['huisregel','roken','alcohol','drugs','kleding','dress code','clean desk','bureau','gedrag','internet'],
+    antwoord: `Huisregels bij daar-om.nl <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><br><br>
+    • <b>Kleding:</b> zakelijk/representatief uiterlijk<br>
+    • <b>Clean desk:</b> bureau netjes achterlaten aan het einde van de dag<br>
+    • <b>Roken:</b> alleen buiten, <b>niet</b> bij de voordeur of binnen<br>
+    • <b>Alcohol:</b> niet op werkdagen (borrels uitgezonderd)<br>
+    • <b>Drugs:</b> zero tolerance beleid<br>
+    • <b>Internet:</b> pauzegebruik toegestaan, geen ongepaste sites<br><br>
+    Samen houden we het gezellig! <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3z"/></svg>` },
+
+  // GEHEIMHOUDING
+  { tags: ['geheimhouding','vertrouwelijk','privacy','klantgegevens','nda','geheimhoudingsplicht'],
+    antwoord: `Geheimhouding & privacy <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><br><br>
+    • Alle medewerkers zijn verplicht tot <b>volstrekte geheimhouding</b> over klanten en lopende zaken<br>
+    • Dit geldt ook <b>na het dienstverband</b><br>
+    • Klantgegevens deel je niet buiten de organisatie<br><br>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Vragen? Neem contact op met Ericka.` },
+
+  // STAGE
+  { tags: ['stage','stagiair','stagiar','buddy','begeleider','schooldag','stageopdracht','stagevergoeding'],
+    antwoord: `Stagiaire info <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg><br><br>
+    • Werktijden: <b>08:30 - 17:00</b>, altijd op kantoor<br>
+    • Max. <b>1 dag verlof per maand</b> (schoolafspraken tellen hier niet bij)<br>
+    • Je hebt een <b>inhoudelijke buddy</b> voor dagelijkse vragen<br>
+    • <b>Ericka</b> is eindverantwoordelijke voor verlof en HR-zaken<br>
+    • Stagiaires helpen samen met de <b>lunchorganisatie</b> (corvee)<br><br>
+    Veel succes met je stage! <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>` },
+
+  // WIE IS WIE / TEAM
+  { tags: ['wie is wie','team','collega','smoelenboek','wie werkt','wie doet','wie is','naam','contactpersoon'],
+    antwoord: `Het team van daar-om.nl <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><br><br>
+    Wil je weten wie wie is?<br>
+    • Klik op <b>"Wie is Wie"</b> in het linkermenu<br>
+    • Of bekijk de volledige teampagina op <a href="https://www.daar-om.nl/team/" target="_blank" style="color:var(--blue);font-weight:600;">www.daar-om.nl/team</a><br><br>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> HR-vragen? Dat is altijd <b>Ericka Urrutia</b> (ericka@daar-om.nl).` },
+
+  // ERICKA / CONTACT
+  { tags: ['ericka','contact','hr','human resources','personeelszaken','wie kan ik','wie vraag','aanspreekpunt'],
+    antwoord: `Je HR-aanspreekpunt <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><br><br>
+    Voor alle HR-gerelateerde vragen kun je terecht bij:<br><br>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> <b>Ericka Urrutia</b><br>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> ericka@daar-om.nl<br>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>️ Teammanager talent ontwikkeling<br><br>
+    Ze helpt je graag met verlof, contracten, declaraties en andere persoonlijke zaken.` },
+
+  // MEDEWERKER VAN DE MAAND
+  { tags: ['medewerker van de maand','nomineer','nominatie','winnaar','hall of fame','mvdm','ster'],
+    antwoord: `Medewerker van de Maand <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><br><br>
+    • Ken je een collega die het verschil maakt? <b>Nomineer diegene!</b><br>
+    • Klik op <b>"Medewerker v/d Maand"</b> in het linkermenu<br>
+    • Kies een collega uit de lijst en vertel waarom ze het verdienen<br>
+    • Je nominatie gaat direct naar Ericka<br><br>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg> Aan het einde van de maand kiest het MT de winnaar!` },
+
+  // IDEEËNBUS
+  { tags: ['idee','ideeen','ideeenbus','suggestie','verbetering','voorstel','feedback'],
+    antwoord: `Digitale Ideeënbus <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg><br><br>
+    Heb je een idee of suggestie voor daar-om.nl?<br><br>
+    • Klik op <b>"Ideeënbus"</b> in het linkermenu<br>
+    • Vul je idee in — anoniem mag ook!<br>
+    • Het MT leest alle inzendingen en neemt goede ideeën serieus<br><br>
+    Jouw input telt! <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>` },
+
+  // OVERWERK
+  { tags: ['overwerk','overuren','extra uren','te laat','langer werken','compensatie','uitbetalen'],
+    antwoord: `Overwerk bij daar-om.nl <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><br><br>
+    • Overwerk in <b>spoedeisende gevallen</b> hoort bij het werk<br>
+    • Hier wordt <b>geen extra vergoeding</b> voor gegeven<br>
+    • Structureel overwerk? Bespreek dit met je leidinggevende<br><br>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Vragen? Neem contact op met Ericka.` },
+
+  // PARKEREN
+  { tags: ['parkeren','parkeerplaats','auto parkeer','fiets','openbaar','hoe kom ik'],
+    antwoord: `Naar kantoor komen <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="5" cy="17" r="3"/><circle cx="19" cy="17" r="3"/><path d="M12 17 5 11l4-7h6l3 7H9"/><path d="m15 6 1 4H9"/><path d="M9 11 5 17"/></svg><br><br>
+    Het kantoor van daar-om.nl staat aan:<br>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> <b>Schweitzerlaan 12, 9728 NP Groningen</b><br><br>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Specifieke parkeervragen? Stel ze aan Ericka of een collega die al langer werkt.` },
+
+  // GREET / BEGROETING
+  { tags: ['hoi','hallo','hey','goedemorgen','goedemiddag','goeiemiddag','goede morgen','hi'],
+    antwoord: `Hoi! <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg> Waarmee kan ik je helpen?<br><br>
+    Stel gerust een vraag over:<br>
+    • <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M17 8C8 10 5.9 16.17 3.82 22"/><path d="M8 10C9 4.8 15 3 18 2c-1 3.5-5.5 5-7 8"/><path d="M18 2c3 5 2.5 10 0 14"/><path d="M12 22v-8"/></svg> Vakantie & verlof<br>
+    • <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M4.5 6.5a7 7 0 1 1 11 5.77V20a2 2 0 0 1-4 0v-1h-2v1a2 2 0 0 1-4 0v-7.73A7 7 0 0 1 4.5 6.5z"/></svg> Ziek melden<br>
+    • <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v9a2 2 0 0 1-2 2h-2"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg> Reiskosten<br>
+    • <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Werktijden & thuiswerken<br>
+    • <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Salaris & pensioen<br>
+    • <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Huisregels<br>
+    • Of iets anders over de bedrijfsregels!` },
+];
+
+// Verbeterde matching: telt overlappende woorden + exacte fragmenten
+function vindBestMatch(vraag) {
+  const lower = vraag.toLowerCase().replace(/[?.!,]/g, '');
+  const woorden = lower.split(/\s+/);
+  let besteMatch = null;
+  let hoogsteScore = 0;
+
+  for (const item of kennisbank) {
+    let score = 0;
+    for (const tag of item.tags) {
+      if (lower.includes(tag)) {
+        // Exacte fragment match = hoge score
+        score += tag.split(' ').length * 2;
+      } else {
+        // Individuele woordmatch = lage score
+        for (const woord of woorden) {
+          if (woord.length > 3 && tag.includes(woord)) score += 1;
+        }
+      }
+    }
+    if (score > hoogsteScore) {
+      hoogsteScore = score;
+      besteMatch = item;
+    }
+  }
+  return hoogsteScore >= 2 ? besteMatch : null;
+}
+
+function sendChatMessage() {
+  const input = document.getElementById('chat-input');
+  const msg   = input.value.trim();
+  if (!msg) return;
+
+  input.value = '';
+  addUserMessage(msg);
+  chatHistory.push({ role: 'user', content: msg });
+  addTypingIndicator();
+
+  setTimeout(() => {
+    const typing = document.getElementById('typing-indicator');
+    if (typing) typing.remove();
+
+    const match = vindBestMatch(msg);
+    const reply = match
+      ? match.antwoord
+      : `Hmm, daar heb ik geen specifiek antwoord op. <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><br><br>Probeer het anders te formuleren, of stel je vraag direct aan <b>Ericka</b>:<br><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> <a href="mailto:ericka@daar-om.nl" style="color:var(--blue);font-weight:600;">ericka@daar-om.nl</a>`;
+
+    chatHistory.push({ role: 'assistant', content: reply });
+    addBotMessage(reply);
+  }, 700);
+}
+
+function quickAsk(question) {
+  document.getElementById('chat-input').value = question;
+  sendChatMessage();
+}
+</script>
+</body>
+</html>

@@ -1639,56 +1639,95 @@ const kennisbank = [
     • Of iets anders over de bedrijfsregels!` },
 ];
 
-// Verbeterde matching: telt overlappende woorden + exacte fragmenten
-function vindBestMatch(vraag) {
-  const lower = vraag.toLowerCase().replace(/[?.!,]/g, '');
-  const woorden = lower.split(/\s+/);
-  let besteMatch = null;
-  let hoogsteScore = 0;
+// ── GEMINI AI CHATBOT ──
+const GEMINI_KEY = 'AIzaSyCnoSISYaP7dOTZuPZchnh14PM8oQUi4K4';
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
 
-  for (const item of kennisbank) {
-    let score = 0;
-    for (const tag of item.tags) {
-      if (lower.includes(tag)) {
-        // Exacte fragment match = hoge score
-        score += tag.split(' ').length * 2;
-      } else {
-        // Individuele woordmatch = lage score
-        for (const woord of woorden) {
-          if (woord.length > 3 && tag.includes(woord)) score += 1;
-        }
-      }
-    }
-    if (score > hoogsteScore) {
-      hoogsteScore = score;
-      besteMatch = item;
-    }
-  }
-  return hoogsteScore >= 2 ? besteMatch : null;
-}
+const HR_CONTEXT = `Je bent de interne HR-assistent van daar-om.nl, een online marketing bureau in Groningen met 26 medewerkers.
+Antwoord altijd vriendelijk, kort en in het Nederlands. Gebruik bullet points of korte alinea's.
+Baseer antwoorden ALLEEN op de bedrijfsregels hieronder. Weet je het niet? Verwijs naar Ericka (ericka@daar-om.nl).
 
-function sendChatMessage() {
+WERKTIJDEN: 08:30-17:00, 40u/week. Lunch 12:00-13:00 in kantine. Thuiswerken na 1e jaar in overleg. Stagiaires altijd op kantoor.
+VAKANTIE: 25 dagen/jaar. Aanvragen via Simplicate. Max 15 dagen aaneengesloten. Toeslag 8%, uitbetaald mei.
+FEESTDAGEN: Nieuwjaarsdag, 2e paasdag, Koningsdag, Hemelvaartsdag, 2e pinksterdag, 1e+2e kerstdag. Bevrijdingsdag alleen in lustrumjaren.
+BIJZONDER VERLOF: Eigen huwelijk 2d, bevalling partner 1w, overlijden partner/kind t/m 2d na begrafenis, verhuizing 1d, tandarts/huisarts max 3u/jaar.
+ZIEK MELDEN: Bel 08:00-08:30. Mail ziek-beter@daar-om.nl. Jaar 1: 100% salaris, jaar 2: 70%. Arbodienst: ArboNed.
+REISKOSTEN: >10km enkele reis. Max 40km, €0,23/km, max €165/mnd. OV: 2e klas.
+DECLARATIES: Voor de 10e van de maand. Ouder dan 3 maanden: vervalt.
+CONTRACT: Proeftijd 1 mnd (6-24mnd) of 2 mnd (onbepaald). Opzegtermijn 1 mnd, einde van maand.
+PENSIOEN: Allianz/Rabo PGGM PPI, premie 50/50.
+HUISREGELS: Representatieve kleding. Clean desk. Roken alleen buiten. Geen alcohol (VrijMiBo uitgezonderd). Zero tolerance drugs.
+KANTOOR: Weekstart maandag 08:30. VrijMiBo vrijdag 16:00. Lunch verzorgd door daar-om.nl.
+SIMPLICATE: Uren schrijven, verlof aanvragen, declaraties.
+HR CONTACT: Ericka Urrutia — ericka@daar-om.nl`;
+
+async function sendChatMessage() {
   const input = document.getElementById('chat-input');
   const msg   = input.value.trim();
   if (!msg) return;
 
-  input.value = '';
+  input.value   = '';
+  input.disabled = true;
+
   addUserMessage(msg);
   chatHistory.push({ role: 'user', content: msg });
   addTypingIndicator();
 
-  setTimeout(() => {
+  // Bouw Gemini conversatie op met HR context als eerste bericht
+  const berichten = [];
+  if (chatHistory.length === 1) {
+    berichten.push({
+      role: 'user',
+      parts: [{ text: HR_CONTEXT + '\n\nVraag: ' + msg }]
+    });
+  } else {
+    berichten.push({
+      role: 'user',
+      parts: [{ text: HR_CONTEXT + '\n\nVraag: ' + chatHistory[0].content }]
+    });
+    for (let i = 1; i < chatHistory.length; i++) {
+      berichten.push({
+        role: chatHistory[i].role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: chatHistory[i].content }]
+      });
+    }
+  }
+
+  try {
+    const res  = await fetch(GEMINI_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: berichten,
+        generationConfig: { maxOutputTokens: 400, temperature: 0.2 }
+      })
+    });
+
+    const data  = await res.json();
+    const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!reply) throw new Error('Geen antwoord');
+
+    chatHistory.push({ role: 'assistant', content: reply });
+
     const typing = document.getElementById('typing-indicator');
     if (typing) typing.remove();
 
-    const match = vindBestMatch(msg);
-    const reply = match
-      ? match.antwoord
-      : `Hmm, daar heb ik geen specifiek antwoord op. <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><br><br>Probeer het anders te formuleren, of stel je vraag direct aan <b>Ericka</b>:<br><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> <a href="mailto:ericka@daar-om.nl" style="color:var(--blue);font-weight:600;">ericka@daar-om.nl</a>`;
+    const opgemaakt = reply
+      .replace(/[*][*](.*?)[*][*]/g, '<b>$1</b>')
+      .replace(/[*](.*?)[*]/g, '$1')
+      .replace(/\n/g, '<br>');
 
-    chatHistory.push({ role: 'assistant', content: reply });
-    addBotMessage(reply);
-  }, 700);
+    addBotMessage(opgemaakt);
+
+  } catch (err) {
+    const typing = document.getElementById('typing-indicator');
+    if (typing) typing.remove();
+    addBotMessage('Er is een verbindingsfout. Stel je vraag aan <b>Ericka</b>: <a href="mailto:ericka@daar-om.nl" style="color:var(--teal);">ericka@daar-om.nl</a>');
+  } finally {
+    input.disabled = false;
+    input.focus();
+  }
 }
 
 function quickAsk(question) {
